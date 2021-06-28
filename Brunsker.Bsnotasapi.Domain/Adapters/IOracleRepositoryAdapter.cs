@@ -23,7 +23,7 @@ namespace Brunsker.Bsnotas.Domain.Adapters
         Task<Usuario> SelectUsuarioPorEmail(string email);
         Task<Usuario> Login(string login, string senha);
         Task<IEnumerable<ResultadoValidacaoPreEntrada>> ValidaPreEntrada(ValidarPreEntrada validar);
-        Task ProcessaPreEntrada(string chave, int seqCliente, long? numped);
+        Task ProcessaPreEntrada(ItensPedidoPre item);
         Task<IEnumerable<PedidoAssociado>> SelectPedidosAssociados(string chave, int seqCliente);
         Task<ParametrosCliente> SelectParametros(int seqCliente);
         Task<IEnumerable<ItemPedido>> SelectItensPedido(PesquisaItensPedido pesq);

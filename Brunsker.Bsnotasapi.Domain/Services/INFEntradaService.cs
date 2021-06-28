@@ -23,7 +23,7 @@ namespace Brunsker.Bsnotas.Domain.Services
         byte[] ExportaXmls(IEnumerable<NotaFiscalEntrada> notas);
         Task<byte[]> ExportaPdfs(IEnumerable<NotaFiscalEntrada> notas);
         Task<IEnumerable<ResultadoValidacaoPreEntrada>> ValidarPreEntrada(ValidarPreEntrada validar);
-        Task ProcessaPreEntrada(string chave, int seqCliente, long? numped);
+        Task ProcessaPreEntrada(ItensPedidoPre item);
         Task<IEnumerable<PedidoAssociado>> SelectPedidosAssociados(string chave, int seqCliente);
         Task<ParametrosCliente> SelectParametros(int seqCliente);
         Task<IEnumerable<ItemPedido>> SelectItensPedido(PesquisaItensPedido pesq);

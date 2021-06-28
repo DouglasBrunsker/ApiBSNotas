@@ -491,7 +491,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
             }
             return result;
         }
-        public async Task ProcessaPreEntrada(string chave, int seqCliente, long? numped)
+        public async Task ProcessaPreEntrada(ItensPedidoPre item)
         {
             try
             {
@@ -503,9 +503,11 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
                     var parms = new OracleDynamicParameters();
 
-                    parms.Add("pSEQ_CLIENTE", seqCliente);
-                    parms.Add("pCHAVENFE", chave);
-                    parms.Add("pNUMPEDPREENT", numped);
+                    parms.Add("pSEQ_CLIENTE", item.SEQ_CLIENTE);
+                    parms.Add("pCHAVENFE", item.CHAVE);
+                    parms.Add("pQTDE", item.QTPENTREGUE);
+                    parms.Add("pCODPROD", item.CODPROD);
+                    parms.Add("pNUMPEDPREENT", item.NUMPED);
 
                     await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
                 }
@@ -541,7 +543,6 @@ namespace Brunsker.Bsnotas.OracleAdapter
             }
             return pedidos;
         }
-
         public async Task<ParametrosCliente> SelectParametros(int seqCliente)
         {
             ParametrosCliente parametro = null;

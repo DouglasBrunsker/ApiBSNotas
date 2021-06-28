@@ -212,12 +212,16 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return Ok(result);
         }
-        [HttpGet("PreEntrada/{seqCliente}/{chave}/{numped}")]
-        public async Task<IActionResult> ProcessaPreEntrada(string chave, int seqCliente, long? numped)
+        [HttpPost("ProcessaPreEntrada")]
+        public async Task<IActionResult> ProcessaPreEntrada(IEnumerable<ItensPedidoPre> itens)
         {
-            numped = numped == 0 ? null : numped;
-
-            await _nfeEntradaService.ProcessaPreEntrada(chave, seqCliente, numped);
+            if (itens.Any())
+            {
+                foreach (var item in itens)
+                {
+                    await _nfeEntradaService.ProcessaPreEntrada(item);
+                }
+            }
 
             return NoContent();
         }

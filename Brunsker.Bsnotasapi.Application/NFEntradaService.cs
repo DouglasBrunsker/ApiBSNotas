@@ -307,11 +307,11 @@ namespace Brunsker.Bsnotas.Application
 
             return result;
         }
-        public async Task ProcessaPreEntrada(string chave, int seqCliente, long? numped)
+        public async Task ProcessaPreEntrada(ItensPedidoPre item)
         {
             _logger.LogInformation("Iniciou o processo de  Pre Entrada.");
 
-            await _rep.ProcessaPreEntrada(chave, seqCliente, numped);
+            await _rep.ProcessaPreEntrada(item);
 
             _logger.LogInformation("Pre Entrada realizada com sucesso.");
         }
