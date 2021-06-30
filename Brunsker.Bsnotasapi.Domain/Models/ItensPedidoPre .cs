@@ -7,5 +7,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public long NUMPED { get; set; }
         public long SEQ_CLIENTE { get; set; }
         public string CHAVE { get; set; }
+        public int NUMSEQ { get; set; }
     }
 }

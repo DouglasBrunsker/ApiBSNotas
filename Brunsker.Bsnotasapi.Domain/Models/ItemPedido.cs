@@ -9,5 +9,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public int QTPEDIDA { get; set; }
         public int QTPENTREGUE { get; set; }
         public double PCOMPRA { get; set; }
+        public int NUMSEQ { get; set; }
     }
 }

@@ -24,4 +24,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && apt-get -y install libxml2 libgdiplus libc6-dev
 
+#Variaveis de ambiente Oracle
+ENV TZ=America/Sao_Paulo
+
+
 

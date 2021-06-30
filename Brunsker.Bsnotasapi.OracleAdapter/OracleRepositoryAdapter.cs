@@ -505,8 +505,9 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
                     parms.Add("pSEQ_CLIENTE", item.SEQ_CLIENTE);
                     parms.Add("pCHAVENFE", item.CHAVE);
-                    parms.Add("pQTDE", item.QTPENTREGUE);
                     parms.Add("pCODPROD", item.CODPROD);
+                    parms.Add("pNUMSEQ", item.NUMSEQ);
+                    parms.Add("pQTDE", item.QTPENTREGUE);
                     parms.Add("pNUMPEDPREENT", item.NUMPED);
 
                     await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
