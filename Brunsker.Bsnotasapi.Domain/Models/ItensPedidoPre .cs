@@ -8,5 +8,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public long SEQ_CLIENTE { get; set; }
         public string CHAVE { get; set; }
         public int NUMSEQ { get; set; }
+        public string PREENTSEMVINCPED { get; set; }
     }
 }

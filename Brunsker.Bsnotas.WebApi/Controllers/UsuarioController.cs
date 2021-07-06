@@ -2,8 +2,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Brunsker.Bsnotasapi.Domain.Dtos;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
-using Brunsker.Bsnotasapi.Domain.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,10 +15,11 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioServices _services;
-
-        public UsuarioController(IUsuarioServices services)
+        private readonly IUsuarioRepository _rep;
+        public UsuarioController(IUsuarioServices services, IUsuarioRepository rep)
         {
             _services = services;
+            _rep = rep;
         }
 
         [HttpGet("Current")]
@@ -26,7 +27,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         {
             var login = HttpContext.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Name)?.Value;
 
-            var usuario = await _services.SelectUsuarioPorEmail(login);
+            var usuario = await _rep.SelectUsuarioPorEmail(login);
 
             return new UsuarioDto
             {
@@ -41,11 +42,11 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("Registrar")]
         public async Task<ActionResult<UsuarioDto>> RegistrarUsuario(Usuario usuario)
         {
-            var user = await _services.SelectUsuarioPorEmail(usuario.LOGIN);
+            var user = await _rep.SelectUsuarioPorEmail(usuario.LOGIN);
 
             if (user != null) return BadRequest("Endereco de email em uso.");
 
-            await _services.CriaUsuario(usuario);
+            await _rep.InsertUsuario(usuario);
 
             return new UsuarioDto
             {
@@ -61,7 +62,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<UsuarioDto>> Login(UsuarioParaLogin loginDto)
         {
-            var usuario = await _services.Login(loginDto.Login, loginDto.Senha);
+            var usuario = await _rep.Login(loginDto.Login, loginDto.Senha);
 
             if (usuario == null) return Unauthorized();
 
@@ -73,6 +74,13 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
                 NOME = usuario.NOME,
                 AVATAR = usuario.AVATAR
             };
+        }
+
+        [AllowAnonymous]
+        [HttpGet("parametros/{id}")]
+        public async Task<IActionResult> GetParametros(long id)
+        {
+            return Ok(await _rep.SelectParametros(id));
         }
     }
 }

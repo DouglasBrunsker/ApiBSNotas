@@ -1,5 +1,4 @@
-﻿using Brunsker.Bsnotas.Domain.Adapters;
-using Dapper;
+﻿using Dapper;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Data;
@@ -10,20 +9,21 @@ using Dapper.Oracle;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Brunsker.Bsnotasapi.Domain.Models;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
 
 namespace Brunsker.Bsnotas.OracleAdapter
 {
-    public class OracleRepositoryAdapter : IOracleRepositoryAdapter
+    public class NFEntradaRepository : INFEntradaRepository
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger _logger;
         private readonly string _connectionString;
 
-        public OracleRepositoryAdapter(IConfiguration configuration, ILoggerFactory logger)
+        public NFEntradaRepository(IConfiguration configuration, ILoggerFactory logger)
         {
             _configuration = configuration;
 
-            _logger = logger.CreateLogger<OracleRepositoryAdapter>();
+            _logger = logger.CreateLogger<NFEntradaRepository>();
 
             _connectionString = _configuration.GetConnectionString("OracleConnection");
         }
@@ -390,79 +390,6 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 _logger.LogError("Error: " + ex.Message);
             }
         }
-        public async Task InsertUsuario(Usuario usuario)
-        {
-            try
-            {
-                string sql = "pkg_clientes_nfe.INSERT_USUARIO";
-
-                using (var conn = new OracleConnection(_connectionString))
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    var parms = new OracleDynamicParameters();
-
-                    parms.Add("pNOME", usuario.NOME);
-                    parms.Add("pLOGIN", usuario.LOGIN);
-                    parms.Add("pSENHA", usuario.SENHA);
-                    parms.Add("pSEQ_CLIENTE", usuario.SEQ_CLIENTE);
-                    parms.Add("pAVATAR", usuario.AVATAR);
-
-                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error: " + ex.Message);
-            }
-        }
-        public async Task<Usuario> SelectUsuarioPorEmail(string email)
-        {
-            Usuario usuario = null;
-            try
-            {
-                string sql = $"SELECT * FROM BSNT_USERS U WHERE U.LOGIN = '{email}'";
-
-                using (var conn = new OracleConnection(_connectionString))
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    usuario = await conn.QueryFirstOrDefaultAsync<Usuario>(sql);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error: " + ex.Message);
-            }
-            return usuario;
-        }
-        public async Task<Usuario> Login(string login, string senha)
-        {
-            Usuario usuario = null;
-
-            try
-            {
-                string sql = "pkg_clientes_nfe.LOGIN_USUARIO";
-
-                using (var conn = new OracleConnection(_connectionString))
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    var parms = new OracleDynamicParameters();
-
-                    parms.Add("pLOGIN", login);
-                    parms.Add("pSENHA", senha);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    usuario = await conn.QuerySingleOrDefaultAsync<Usuario>(sql, parms, commandType: CommandType.StoredProcedure);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error: " + ex.Message);
-            }
-            return usuario;
-        }
         public async Task<IEnumerable<ResultadoValidacaoPreEntrada>> ValidaPreEntrada(ValidarPreEntrada validar)
         {
             IEnumerable<ResultadoValidacaoPreEntrada> result = null;
@@ -504,6 +431,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     var parms = new OracleDynamicParameters();
 
                     parms.Add("pSEQ_CLIENTE", item.SEQ_CLIENTE);
+                    parms.Add("pPREENTSEMVINCPED", item.PREENTSEMVINCPED);
                     parms.Add("pCHAVENFE", item.CHAVE);
                     parms.Add("pCODPROD", item.CODPROD);
                     parms.Add("pNUMSEQ", item.NUMSEQ);
@@ -543,27 +471,6 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 _logger.LogError("Error: " + ex.Message);
             }
             return pedidos;
-        }
-        public async Task<ParametrosCliente> SelectParametros(int seqCliente)
-        {
-            ParametrosCliente parametro = null;
-
-            try
-            {
-                string sql = $"SELECT P.VALIDARFINANPED FROM BSNT_PARAMETROS P WHERE P.SEQ_CLIENTE ={seqCliente}";
-
-                using (var conn = new OracleConnection(_connectionString))
-                {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    parametro = await conn.QueryFirstOrDefaultAsync<ParametrosCliente>(sql);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error:" + ex.Message);
-            }
-            return parametro;
         }
         public async Task<IEnumerable<ItemPedido>> SelectItensPedido(PesquisaItensPedido pesq)
         {

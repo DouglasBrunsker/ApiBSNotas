@@ -1,7 +1,5 @@
-﻿using Brunsker.Bsnotas.Application;
-using Brunsker.Bsnotas.Domain.Services;
-using Brunsker.Bsnotasapi.Application.Services;
-using Brunsker.Bsnotasapi.Domain.Services;
+﻿using Brunsker.Bsnotasapi.Application.Services;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

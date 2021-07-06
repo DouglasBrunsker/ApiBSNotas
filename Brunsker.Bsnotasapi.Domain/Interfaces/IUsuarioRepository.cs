@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using Brunsker.Bsnotasapi.Domain.Models;
 
-namespace Brunsker.Bsnotasapi.Domain.Services
+namespace Brunsker.Bsnotasapi.Domain.Interfaces
 {
-    public interface IUsuarioServices
+    public interface IUsuarioRepository
     {
-        Task CriaUsuario(Usuario usuario);
-        string GeraToken(Usuario usuario);
+        Task<ParametrosCliente> SelectParametros(long id);
+        Task InsertUsuario(Usuario usuario);
         Task<Usuario> SelectUsuarioPorEmail(string email);
         Task<Usuario> Login(string login, string senha);
     }

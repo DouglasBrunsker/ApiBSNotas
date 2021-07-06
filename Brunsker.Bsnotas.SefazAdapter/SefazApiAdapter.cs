@@ -1,4 +1,4 @@
-﻿using Brunsker.Bsnotas.Domain.Adapters;
+﻿using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,8 +16,8 @@ namespace Brunsker.Bsnotas.SefazAdapter
     public class SefazApiAdapter : ISefazApiAdapter
     {
         private ILogger<SefazApiAdapter> _logger;
-        private IOracleRepositoryAdapter _rep;
-        public SefazApiAdapter(ILogger<SefazApiAdapter> logger, IOracleRepositoryAdapter rep)
+        private INFEntradaRepository _rep;
+        public SefazApiAdapter(ILogger<SefazApiAdapter> logger, INFEntradaRepository rep)
         {
             _logger = logger;
             _rep = rep;

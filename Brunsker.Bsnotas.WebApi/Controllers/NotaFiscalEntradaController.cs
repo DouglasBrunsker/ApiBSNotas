@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Brunsker.Bsnotas.Domain.Services;
 using Brunsker.Bsnotas.Domain.Models;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Brunsker.Bsnotas.WebApi.Helpers;
@@ -8,12 +7,12 @@ using System.Collections.Generic;
 using System.IO;
 using Brunsker.Bsnotasapi.Domain.Dtos;
 using System.Linq;
-using Brunsker.Bsnotas.Domain.Adapters;
 using Microsoft.Extensions.Logging;
 using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
 
 namespace Brunsker.Bsnotas.WebApi.Controllers
 {
@@ -23,16 +22,18 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
     [Authorize]
     public class NotaFiscalEntradaController : ControllerBase
     {
-        private readonly INfeEntradaService _nfeEntradaService;
+        private readonly INFEntradaRepository _rep;
+        private readonly INfeEntradaService _sevices;
         private readonly IWebHostEnvironment _env;
         private readonly ISefazApiAdapter _sefazServices;
         private readonly ILogger<NotaFiscalEntradaController> _logger;
         private readonly IMapper _mapper;
 
-        public NotaFiscalEntradaController(INfeEntradaService nfeEntradaService, IWebHostEnvironment env,
+        public NotaFiscalEntradaController(INFEntradaRepository rep, INfeEntradaService sevices, IWebHostEnvironment env,
                                            ISefazApiAdapter sefazServices, ILogger<NotaFiscalEntradaController> logger, IMapper mapper)
         {
-            _nfeEntradaService = nfeEntradaService;
+            _rep = rep;
+            _sevices = sevices;
             _env = env;
             _sefazServices = sefazServices;
             _logger = logger;
@@ -43,7 +44,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         public async Task<IActionResult> BuscarEmpresasAsync(long seqCliente)
         {
 
-            var listaEmpresas = await _nfeEntradaService.BuscarEmpresasAsync(seqCliente);
+            var listaEmpresas = await _rep.BuscarEmpresasAsync(seqCliente);
 
             if (listaEmpresas != null)
             {
@@ -56,7 +57,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("BuscarTotalizadoresGrafico")]
         public async Task<IActionResult> BuscarTotalizadoresGrafico(FiltroTotalizadores filtro)
         {
-            var result = await _nfeEntradaService.BuscarTotalizadoresGraficoAsync(filtro);
+            var result = await _rep.BuscarTotalizadoresGraficoAsync(filtro);
 
             return Ok(result);
         }
@@ -64,7 +65,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("BuscarTotalizadores")]
         public async Task<IActionResult> BuscarTotalizadoresAsync(FiltroTotalizadores filtro)
         {
-            var totalizadores = await _nfeEntradaService.BuscarTotalizadoresAsync(filtro.DataInicial, filtro.DataFinal, filtro.SeqCliente);
+            var totalizadores = await _rep.BuscarTotalizadoresAsync(filtro.DataInicial, filtro.DataFinal, filtro.SeqCliente);
 
             if (totalizadores != null)
             {
@@ -77,7 +78,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("BuscarNotasFiscaisEntrada/{index}/{length}")]
         public async Task<IActionResult> BuscarNotasFiscaisEntradaAsync(ParametrosPesquisaNfEntrada pesquisa, int index, int length)
         {
-            var nfEntrada = await _nfeEntradaService.BuscarNotasFiscaisEntrada(pesquisa);
+            var nfEntrada = await _rep.BuscarNotasFiscaisEntradaAsync(pesquisa);
 
             var result = new Pagination<NotaFiscalEntrada>(index, length, nfEntrada);
 
@@ -92,7 +93,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpGet("BuscarCfopNotaFiscalEntrada/{seqcliente}")]
         public async Task<IActionResult> BuscarCfopNotaFiscalEntradaAsync(long seqcliente)
         {
-            var cfop = await _nfeEntradaService.BuscarCfopNotaFiscalEntrada(seqcliente);
+            var cfop = await _rep.BuscarCfopNotaFiscalEntradaAsync(seqcliente);
 
             if (cfop != null)
             {
@@ -105,7 +106,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpGet("BuscarFornecedores/{seqcliente}")]
         public async Task<IActionResult> BuscarFornecedoresAsync(long seqcliente)
         {
-            var fornecedores = await _nfeEntradaService.BuscarFornecedoresAsync(seqcliente);
+            var fornecedores = await _rep.BuscarFornecedoresAsync(seqcliente);
 
             if (fornecedores != null)
             {
@@ -118,7 +119,9 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpGet("GerarPdf/{chave}")]
         public async Task<IActionResult> GerarPdfAsync(string chave)
         {
-            var pdf = await _nfeEntradaService.GerarPdfAsync(chave);
+            string xml = await _rep.SelectArquivoXml(chave);
+
+            var pdf = await _sevices.GerarPdfAsync(xml);
 
             if (pdf != null)
             {
@@ -132,7 +135,9 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpGet("GerarCCePDF/{chave}")]
         public async Task<IActionResult> GerarCCePDF(string chave)
         {
-            var pdf = await _nfeEntradaService.GerarCCeAsync(chave);
+            string xml = await _rep.SelectArquivoXmlCCe(chave);
+
+            var pdf = await _sevices.GerarCCeAsync(xml);
 
             if (pdf != null)
             {
@@ -147,11 +152,11 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("ExportaExcel")]
         public async Task<IActionResult> ExportaExcelAsync(ParametrosPesquisaNfEntrada filtro)
         {
-            var notas = await _nfeEntradaService.BuscarNotasFiscaisEntrada(filtro);
+            var notas = await _rep.BuscarNotasFiscaisEntradaAsync(filtro);
 
             var notasDto = _mapper.Map<IEnumerable<NFeToExport>>(notas);
 
-            MemoryStream excelMemoryStream = _nfeEntradaService.ExportaExcel(notasDto);
+            MemoryStream excelMemoryStream = _sevices.ExportaExcel(notasDto);
 
             if (excelMemoryStream == null)
             {
@@ -163,7 +168,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("ExportaXml")]
         public IActionResult ExportaXml(IEnumerable<NotaFiscalEntrada> filtro)
         {
-            var bytes = _nfeEntradaService.ExportaXmls(filtro);
+            var bytes = _sevices.ExportaXmls(filtro);
 
             if (bytes.Length > 0)
             {
@@ -175,7 +180,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("ExportaPdfs")]
         public async Task<IActionResult> ExportaPdf(IEnumerable<NotaFiscalEntrada> filtro)
         {
-            var bytes = await _nfeEntradaService.ExportaPdfs(filtro);
+            var bytes = await _sevices.ExportaPdfs(filtro);
 
             if (bytes.Length > 0)
             {
@@ -208,10 +213,11 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpPost("ValidacaoPreEntrada")]
         public async Task<IActionResult> ValidacaoPreEntrada(ValidarPreEntrada validar)
         {
-            var result = await _nfeEntradaService.ValidarPreEntrada(validar);
+            var result = await _rep.ValidaPreEntrada(validar);
 
             return Ok(result);
         }
+
         [HttpPost("ProcessaPreEntrada")]
         public async Task<IActionResult> ProcessaPreEntrada(IEnumerable<ItensPedidoPre> itens)
         {
@@ -219,7 +225,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             {
                 foreach (var item in itens)
                 {
-                    await _nfeEntradaService.ProcessaPreEntrada(item);
+                    await _rep.ProcessaPreEntrada(item);
                 }
             }
 
@@ -229,21 +235,15 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpGet("BuscaPedidosAssociados/{seqCliente}/{chave}")]
         public async Task<IEnumerable<PedidoAssociado>> BuscaPedidosAssociados(string chave, int seqCliente)
         {
-            var pedidos = await _nfeEntradaService.SelectPedidosAssociados(chave, seqCliente);
+            var pedidos = await _rep.SelectPedidosAssociados(chave, seqCliente);
 
             return pedidos;
         }
-        [HttpGet("BuscaParametros/{seqCliente}")]
-        public async Task<ParametrosCliente> BuscaParametros(int seqCliente)
-        {
-            var parametro = await _nfeEntradaService.SelectParametros(seqCliente);
 
-            return parametro;
-        }
         [HttpPost("BuscaItensPedido")]
         public async Task<IEnumerable<ItemPedido>> BuscaItensPedido(PesquisaItensPedido pesq)
         {
-            var itens = await _nfeEntradaService.SelectItensPedido(pesq);
+            var itens = await _rep.SelectItensPedido(pesq);
 
             return itens;
         }

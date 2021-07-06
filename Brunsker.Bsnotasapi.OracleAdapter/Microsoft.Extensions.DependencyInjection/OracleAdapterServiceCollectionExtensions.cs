@@ -1,6 +1,6 @@
 ﻿using Brunsker.Bsnotas.OracleAdapter;
-using Brunsker.Bsnotas.Domain.Adapters;
-using Oracle.ManagedDataAccess.Client;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
+using Brunsker.Bsnotasapi.OracleAdapter;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -10,7 +10,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddOracleAdapterRespository(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IOracleRepositoryAdapter, OracleRepositoryAdapter>();
+            services.AddTransient<INFEntradaRepository, NFEntradaRepository>();
+            services.AddTransient<IUsuarioRepository, UsuarioRepository>();
 
             return services;
         }

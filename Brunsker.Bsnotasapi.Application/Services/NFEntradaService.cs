@@ -1,7 +1,5 @@
-﻿using Brunsker.Bsnotas.Domain.Adapters;
-using Brunsker.Bsnotas.Domain.Models;
-using Brunsker.Bsnotas.Domain.Services;
-using Brunsker.Bsnotasapi.Domain.Dtos;
+﻿using Brunsker.Bsnotasapi.Domain.Dtos;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
@@ -18,94 +16,21 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-namespace Brunsker.Bsnotas.Application
+namespace Brunsker.Bsnotasapi.Application.Services
 {
     public class NfeEntradaService : INfeEntradaService
     {
         private readonly ILogger<NfeEntradaService> _logger;
-        private IOracleRepositoryAdapter _rep;
 
-        public NfeEntradaService(ILogger<NfeEntradaService> logger, IOracleRepositoryAdapter oracleRepository)
+        public NfeEntradaService(ILogger<NfeEntradaService> logger)
         {
             _logger = logger;
-            _rep = oracleRepository;
         }
-
-        public Task<IEnumerable<EmpresasCliente>> BuscarEmpresasAsync(long seqCliente)
-        {
-
-            _logger.LogInformation("Iniciou o processo de busca de empresas  {CodigoCliente}", seqCliente);
-
-            var resultado = _rep.BuscarEmpresasAsync(seqCliente);
-
-            _logger.LogInformation("busca de empresas concluida com sucesso.");
-
-            return resultado;
-        }
-        public Task<IEnumerable<NotaFiscalEntrada>> BuscarNotasFiscaisEntrada(ParametrosPesquisaNfEntrada param)
-        {
-            _logger.LogInformation("Realizando busca de ntoas fiscais no BD com os seguintes criterios de pesquisa: {@CriteriosPesquisa}", new { Criterios = param });
-
-            var resultado = _rep.BuscarNotasFiscaisEntradaAsync(param);
-
-            _logger.LogInformation("pesquisa de notas fiscais de entrada concluida com sucesso.");
-
-            return resultado;
-        }
-        public Task<Totalizadores> BuscarTotalizadoresAsync(DateTime dataInicio, DateTime dataFim, int seqCliente)
-        {
-
-            _logger.LogInformation("Realizando busca de totalizadores no BD com os seguintes criterios de pesquisa: {@CriteriosPesquisa}",
-               new
-               {
-                   seqCliente = seqCliente,
-                   dataInicio = dataInicio,
-                   dataFim = dataFim
-               });
-
-            var resultado = _rep.BuscarTotalizadoresAsync(dataInicio, dataFim, seqCliente);
-
-            _logger.LogInformation("pesquisa de totalizadores concluida com sucesso.");
-
-            return resultado;
-        }
-        public Task<IEnumerable<CFOP>> BuscarCfopNotaFiscalEntrada(long seqCliente)
-        {
-            _logger.LogInformation("Realizando busca de cfop no BD com os seguintes criterios de pesquisa: {@CriteriosPesquisa}", new { Criterios = seqCliente });
-
-            var resultado = _rep.BuscarCfopNotaFiscalEntradaAsync(seqCliente);
-
-            _logger.LogInformation("pesquisa de totalizadores concluida com sucesso.");
-
-            return resultado;
-        }
-        public Task<IEnumerable<DetalheNotaFiscalEntrada>> BuscarDetalhesNotaFiscalEntradaAsync(long seqCliente, string chaveNfe)
-        {
-            _logger.LogInformation("Realizando busca de detalhes da nota fiscal no BD com os seguintes criterios de pesquisa: {@CriteriosPesquisa}", new { Criterios = seqCliente });
-
-            var resultado = _rep.BuscarDetalhesNotaFiscalEntradaAsync(seqCliente, chaveNfe);
-
-            _logger.LogInformation("pesquisa de detalhes da nota fiscal concluida com sucesso.");
-
-            return resultado;
-        }
-        public Task<IEnumerable<Fornecedores>> BuscarFornecedoresAsync(long seqCliente)
-        {
-            _logger.LogInformation("Realizando busca de fornecedores no BD com os seguintes criterios de pesquisa: {@CriteriosPesquisa}", new { Criterios = seqCliente });
-
-            var resultado = _rep.BuscarFornecedoresAsync(seqCliente);
-
-            _logger.LogInformation("pesquisa de fornecedores concluida com sucesso.");
-
-            return resultado;
-        }
-        public async Task<Stream> GerarPdfAsync(string chave)
+        public async Task<Stream> GerarPdfAsync(string xml)
         {
             try
             {
                 _logger.LogInformation("Iniciou o processo de geracao de pdf");
-
-                var xml = await _rep.SelectArquivoXml(chave);
 
                 using (var http = new HttpClient())
                 {
@@ -126,12 +51,6 @@ namespace Brunsker.Bsnotas.Application
 
                 return null;
             }
-        }
-        public async Task<IEnumerable<TotalizadorNotasPorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro)
-        {
-            var resultado = await _rep.BuscarTotalizadoresGraficoAsync(filtro);
-
-            return resultado;
         }
         public MemoryStream ExportaExcel(IEnumerable<NFeToExport> notas)
         {
@@ -266,14 +185,11 @@ namespace Brunsker.Bsnotas.Application
             }
             return bytes;
         }
-
-        public async Task<Stream> GerarCCeAsync(string chave)
+        public async Task<Stream> GerarCCeAsync(string xml)
         {
             try
             {
                 _logger.LogInformation("Iniciou o processo de geracao de CCe em pdf");
-
-                var xml = await _rep.SelectArquivoXmlCCe(chave);
 
                 using (var http = new HttpClient())
                 {
@@ -295,44 +211,6 @@ namespace Brunsker.Bsnotas.Application
 
                 return null;
             }
-        }
-
-        public async Task<IEnumerable<ResultadoValidacaoPreEntrada>> ValidarPreEntrada(ValidarPreEntrada validar)
-        {
-            _logger.LogInformation("Iniciou o processo de validacao Pre Entrada.");
-
-            var result = await _rep.ValidaPreEntrada(validar);
-
-            _logger.LogInformation("Validacao recebida com sucesso.");
-
-            return result;
-        }
-        public async Task ProcessaPreEntrada(ItensPedidoPre item)
-        {
-            _logger.LogInformation("Iniciou o processo de  Pre Entrada.");
-
-            await _rep.ProcessaPreEntrada(item);
-
-            _logger.LogInformation("Pre Entrada realizada com sucesso.");
-        }
-        public async Task<IEnumerable<PedidoAssociado>> SelectPedidosAssociados(string chave, int seqCliente)
-        {
-            _logger.LogInformation("Iniciou o processo de  busca por pedidos associados.");
-
-            return await _rep.SelectPedidosAssociados(chave, seqCliente);
-        }
-
-        public async Task<ParametrosCliente> SelectParametros(int seqCliente)
-        {
-            _logger.LogInformation("Buscando parametros...");
-
-            return await _rep.SelectParametros(seqCliente);
-        }
-        public async Task<IEnumerable<ItemPedido>> SelectItensPedido(PesquisaItensPedido pesq)
-        {
-            _logger.LogInformation("Buscando itens do pedido...");
-
-            return await _rep.SelectItensPedido(pesq);
         }
     }
 }

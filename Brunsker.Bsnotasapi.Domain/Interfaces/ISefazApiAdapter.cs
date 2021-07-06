@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Brunsker.Bsnotasapi.Domain.Models;
 
-namespace Brunsker.Bsnotas.Domain.Adapters
+namespace Brunsker.Bsnotasapi.Domain.Interfaces
 {
     public interface ISefazApiAdapter
     {

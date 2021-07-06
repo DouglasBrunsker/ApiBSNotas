@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Brunsker.Bsnotas.Domain.Adapters
+namespace Brunsker.Bsnotasapi.Domain.Interfaces
 {
-    public interface IOracleRepositoryAdapter
+    public interface INFEntradaRepository
     {
         Task<string> SelectArquivoXml(string chave);
         Task<string> SelectArquivoXmlCCe(string chave);
@@ -19,13 +19,9 @@ namespace Brunsker.Bsnotas.Domain.Adapters
         Task<IEnumerable<Fornecedores>> BuscarFornecedoresAsync(long seqCliente);
         Task<RecepcaoEvento> SelectRelacaoWebServices(int seq_cliente, string cnpj);
         Task ConfirmaManifestacao(string chave, string codigoEvento);
-        Task InsertUsuario(Usuario usuario);
-        Task<Usuario> SelectUsuarioPorEmail(string email);
-        Task<Usuario> Login(string login, string senha);
         Task<IEnumerable<ResultadoValidacaoPreEntrada>> ValidaPreEntrada(ValidarPreEntrada validar);
         Task ProcessaPreEntrada(ItensPedidoPre item);
         Task<IEnumerable<PedidoAssociado>> SelectPedidosAssociados(string chave, int seqCliente);
-        Task<ParametrosCliente> SelectParametros(int seqCliente);
         Task<IEnumerable<ItemPedido>> SelectItensPedido(PesquisaItensPedido pesq);
     }
 }

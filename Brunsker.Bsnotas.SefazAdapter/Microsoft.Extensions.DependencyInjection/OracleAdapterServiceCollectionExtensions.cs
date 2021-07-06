@@ -1,5 +1,6 @@
-﻿using Brunsker.Bsnotas.Domain.Adapters;
+﻿
 using Brunsker.Bsnotas.SefazAdapter;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 
