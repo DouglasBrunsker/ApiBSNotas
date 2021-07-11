@@ -12,6 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddTransient<INFEntradaRepository, NFEntradaRepository>();
             services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+            services.AddTransient<INFSaidaRepository, NFSaidaRepository>();
 
             return services;
         }

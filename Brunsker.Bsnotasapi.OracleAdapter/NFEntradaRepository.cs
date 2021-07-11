@@ -16,18 +16,17 @@ namespace Brunsker.Bsnotas.OracleAdapter
     public class NFEntradaRepository : INFEntradaRepository
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger _logger;
+        private readonly ILogger<NFEntradaRepository> _logger;
         private readonly string _connectionString;
 
-        public NFEntradaRepository(IConfiguration configuration, ILoggerFactory logger)
+        public NFEntradaRepository(IConfiguration configuration, ILogger<NFEntradaRepository> logger)
         {
             _configuration = configuration;
 
-            _logger = logger.CreateLogger<NFEntradaRepository>();
+            _logger = logger;
 
             _connectionString = _configuration.GetConnectionString("OracleConnection");
         }
-
         public async Task<IEnumerable<EmpresasCliente>> BuscarEmpresasAsync(long seqCliente)
         {
             try
@@ -500,6 +499,35 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 _logger.LogError("Error: " + ex.Message);
             }
             return itens;
+        }
+        public async Task<IEnumerable<object>> BuscarLivroFiscal(ParametroGeracaoLivroFiscal parametro)
+        {
+            IEnumerable<object> livro = null;
+            try
+            {
+                string sql = "pkg_pre_entrada.pesq_gerarnflivrofiscal";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parms = new OracleDynamicParameters();
+
+                    parms.Add("pchave", parametro.Chave);
+                    parms.Add("pcodfornec", parametro.CodigoFornecedor);
+                    parms.Add("pnumnota", parametro.NumeroNota);
+                    parms.Add("pdtemissao", parametro.DataEmissao);
+                    parms.Add("pseq_cliente", parametro.SeqCliente);
+                    parms.Add("cur_out", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                    await conn.QueryAsync<object>(sql, parms, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
+            return livro;
         }
     }
 }
