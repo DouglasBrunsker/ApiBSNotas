@@ -59,5 +59,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public double PERPISXML { get; set; }
         public double PERCOFINSCOMPRA { get; set; }
         public double PERCOFINSXML { get; set; }
+        public string REVENDA { get; set; }
     }
 }
