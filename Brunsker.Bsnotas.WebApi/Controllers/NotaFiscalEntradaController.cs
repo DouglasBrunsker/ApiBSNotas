@@ -247,5 +247,13 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return itens;
         }
+
+        [HttpPost("BuscaLivroFiscal")]
+        public async Task<IActionResult> BuscaLivroFiscal(ParametroGeracaoLivroFiscal parametro)
+        {
+            var livro = await _rep.BuscarLivroFiscal(parametro);
+
+            return Ok(livro);
+        }
     }
 }
