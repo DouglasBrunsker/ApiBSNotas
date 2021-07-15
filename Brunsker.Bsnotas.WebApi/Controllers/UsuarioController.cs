@@ -80,7 +80,9 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpGet("parametros/{id}")]
         public async Task<IActionResult> GetParametros(long id)
         {
-            return Ok(await _rep.SelectParametros(id));
+            var parametros = await _rep.SelectParametros(id);
+
+            return Ok(parametros);
         }
     }
 }

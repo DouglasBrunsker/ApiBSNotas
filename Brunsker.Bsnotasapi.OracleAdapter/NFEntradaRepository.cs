@@ -430,12 +430,12 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     var parms = new OracleDynamicParameters();
 
                     parms.Add("pSEQ_CLIENTE", item.SEQ_CLIENTE);
-                    parms.Add("pPREENTSEMVINCPED", item.PREENTSEMVINCPED);
+                    parms.Add("pPREENTSEMVINCPED", item.PREENTSEMVINCULOPED);
                     parms.Add("pCHAVENFE", item.CHAVE);
-                    parms.Add("pCODPROD", item.CODPROD);
-                    parms.Add("pNUMSEQ", item.NUMSEQ);
-                    parms.Add("pQTDE", item.QTPENTREGUE);
-                    parms.Add("pNUMPEDPREENT", item.NUMPED);
+                    parms.Add("pCODPROD", item.CODPROD == 0 ? null : item.CODPROD);
+                    parms.Add("pNUMSEQ", item.NUMSEQ == 0 ? null : item.NUMSEQ);
+                    parms.Add("pQTDE", item.QTPENTREGUE == 0 ? null : item.QTPENTREGUE);
+                    parms.Add("pNUMPEDPREENT", item.NUMPED == 0 ? null : item.NUMPED);
 
                     await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
                 }

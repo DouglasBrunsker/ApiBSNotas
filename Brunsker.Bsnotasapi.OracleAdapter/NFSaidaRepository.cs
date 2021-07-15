@@ -116,10 +116,10 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             }
             return totalizador;
         }
-        public async Task<Totalizadores> BuscarTotalizador(FiltroTotalizadores filtro)
+        public async Task<TotalizadorSaida> BuscarTotalizador(FiltroTotalizadores filtro)
         {
 
-            Totalizadores totalizador = null;
+            TotalizadorSaida totalizador = null;
 
             try
             {
@@ -139,7 +139,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
 
                     parms.Add("cur_out", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    totalizador = await conn.QueryFirstOrDefaultAsync<Totalizadores>(sql, param: parms, commandType: CommandType.StoredProcedure);
+                    totalizador = await conn.QueryFirstOrDefaultAsync<TotalizadorSaida>(sql, param: parms, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception e)

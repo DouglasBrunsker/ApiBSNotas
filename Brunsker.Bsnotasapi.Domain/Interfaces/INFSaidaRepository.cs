@@ -10,7 +10,7 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<IEnumerable<NotaFiscalSaida>> BuscaNotas(FiltroBuscaNotasSaida filtro);
         Task<IEnumerable<EmpresasCliente>> BuscarEmpresas(long seqCliente);
         Task<IEnumerable<TotalizadorNotasPorDia>> TotalizadorNotasEmitidasDia(FiltroTotalizadores filtro);
-        Task<Totalizadores> BuscarTotalizador(FiltroTotalizadores filtro);
+        Task<TotalizadorSaida> BuscarTotalizador(FiltroTotalizadores filtro);
         Task<IEnumerable<CFOP>> BuscarCFOPs(long seqCliente);
     }
 }
