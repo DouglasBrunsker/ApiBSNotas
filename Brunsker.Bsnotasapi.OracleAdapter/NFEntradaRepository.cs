@@ -436,6 +436,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     parms.Add("pNUMSEQ", item.NUMSEQ == 0 ? null : item.NUMSEQ);
                     parms.Add("pQTDE", item.QTPENTREGUE == 0 ? null : item.QTPENTREGUE);
                     parms.Add("pNUMPEDPREENT", item.NUMPED == 0 ? null : item.NUMPED);
+                    parms.Add("pMSG", item.Mensagem);
 
                     await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
                 }

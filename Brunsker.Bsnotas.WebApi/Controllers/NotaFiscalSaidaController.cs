@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Brunsker.Bsnotas.WebApi.Helpers;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             var notas = await _rep.BuscaNotas(filtro);
 
-            return Ok(notas);
+            return Ok(new Pagination<NotaFiscalSaida>(filtro.Index, filtro.Length, notas));
         }
 
         [HttpPost("BuscarTotalizador")]

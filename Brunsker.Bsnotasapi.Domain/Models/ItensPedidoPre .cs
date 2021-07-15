@@ -9,5 +9,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public string CHAVE { get; set; }
         public int? NUMSEQ { get; set; }
         public string PREENTSEMVINCULOPED { get; set; }
+        public string Mensagem { get; set; }
     }
 }

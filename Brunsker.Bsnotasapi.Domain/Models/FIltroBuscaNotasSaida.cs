@@ -11,5 +11,7 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public string NaturezaOperacao { get; set; }
         public long? NumeroNota { get; set; }
         public string CnpjEmitente { get; set; }
+        public int Index { get; set; }
+        public int Length { get; set; }
     }
 }
