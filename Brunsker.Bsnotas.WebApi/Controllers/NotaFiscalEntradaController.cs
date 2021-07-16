@@ -248,12 +248,12 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             return itens;
         }
 
-        [HttpPost("BuscaLivroFiscal")]
-        public async Task<IActionResult> BuscaLivroFiscal(ParametroGeracaoLivroFiscal parametro)
+        [HttpPost("BuscarContas/{seqCliente}")]
+        public async Task<IActionResult> BuscarContas(long seqCliente)
         {
-            var livro = await _rep.BuscarLivroFiscal(parametro);
+            var contas = await _rep.SelectContas(seqCliente);
 
-            return Ok(livro);
+            return Ok(contas);
         }
     }
 }

@@ -24,5 +24,6 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<IEnumerable<PedidoAssociado>> SelectPedidosAssociados(string chave, int seqCliente);
         Task<IEnumerable<ItemPedido>> SelectItensPedido(PesquisaItensPedido pesq);
         Task<IEnumerable<object>> BuscarLivroFiscal(ParametroGeracaoLivroFiscal parametro);
+        Task<IEnumerable<Contas>> SelectContas(long seqCliente);
     }
 }

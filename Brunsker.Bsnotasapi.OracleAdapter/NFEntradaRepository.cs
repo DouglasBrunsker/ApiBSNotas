@@ -530,6 +530,27 @@ namespace Brunsker.Bsnotas.OracleAdapter
             }
             return livro;
         }
+        public async Task<IEnumerable<Contas>> SelectContas(long seqCliente)
+        {
+            IEnumerable<Contas> contas = null;
+
+            try
+            {
+                string sql = $"SELECT * FROM BSNT_PCCONTAS_WINTHOR C WHERE C.SEQ_CLIENTE = {seqCliente}";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    contas = await conn.QueryAsync<Contas>(sql);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
+            return contas;
+        }
     }
 }
 
