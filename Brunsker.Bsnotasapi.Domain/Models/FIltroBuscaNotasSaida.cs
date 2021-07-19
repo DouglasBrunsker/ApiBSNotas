@@ -13,5 +13,10 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public string CnpjEmitente { get; set; }
         public int Index { get; set; }
         public int Length { get; set; }
+        public bool Devolucao { get; set; }
+        public bool Transferencia { get; set; }
+        public bool Autorizadas { get; set; }
+        public bool Canceladas { get; set; }
+        public bool Denegadas { get; set; }
     }
 }

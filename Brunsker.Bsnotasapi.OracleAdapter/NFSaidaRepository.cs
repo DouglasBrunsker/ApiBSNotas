@@ -39,16 +39,20 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
 
                     var parms = new OracleDynamicParameters();
 
-                    parms.Add("pseq_cliente", filtro.SeqCliente);
-                    parms.Add("pdataini", filtro.DataInicial);
-                    parms.Add("pdatafim", filtro.DataFinal);
-                    parms.Add("pchavenfe", filtro.Chave);
-                    parms.Add("pnaturezaoper", filtro.NaturezaOperacao);
-                    parms.Add("pnumnota", filtro.NumeroNota == 0 ? null : filtro.NumeroNota);
-                    parms.Add("pcnpjemitente", filtro.CnpjEmitente);
-                    parms.Add("pdtentini", null);
-                    parms.Add("pdtentfim", null);
-                    parms.Add("cur_out", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    parms.Add("pSEQ_CLIENTE", filtro.SeqCliente);
+                    parms.Add("pDATAINI", filtro.DataInicial);
+                    parms.Add("pDATAFIM", filtro.DataFinal);
+                    parms.Add("pCHAVENFE", filtro.Chave);
+                    parms.Add("pNATUREZAOPER", filtro.NaturezaOperacao);
+                    parms.Add("pNUMNOTA", filtro.NumeroNota == 0 ? null : filtro.NumeroNota);
+                    parms.Add("pCNPJEMITENTE", filtro.CnpjEmitente);
+                    parms.Add("pDEVOLUCAO", filtro.Devolucao == true ? 1 : 0);
+                    parms.Add("pTRANSF", filtro.Transferencia == true ? 1 : 0);
+                    parms.Add("pSTATUSNFEAUTORI", filtro.Autorizadas == true ? 1 : 0);
+                    parms.Add("pSTATUSNFECANC", filtro.Canceladas == true ? 1 : 0);
+                    parms.Add("pSTATUSNFEDENEGADO", filtro.Denegadas == true ? 1 : 0);
+
+                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                     notas = await conn.QueryAsync<NotaFiscalSaida>(sql, parms, commandType: CommandType.StoredProcedure);
                 }
