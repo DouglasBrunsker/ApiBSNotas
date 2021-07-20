@@ -6,6 +6,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public long QTNFCANCELADAS { get; set; }
         public long QTNF_ERP { get; set; }
         public long QTNFDENEGADAS { get; set; }
-        public long QTNDDEVOLUCAO { get; set; }
+        public long QTNFDEVOLUCAO { get; set; }
     }
 }
