@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using Brunsker.Bsnotas.WebApi.Helpers;
 using Brunsker.Bsnotasapi.Domain.Dtos;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
@@ -89,12 +90,12 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             return Ok(parametros);
         }
 
-        [HttpGet("BucarUsuarios/{seqCliente}")]
-        public async Task<IActionResult> BuscarUsuario(long seqCliente)
+        [HttpGet("BucarUsuarios/{seqCliente}/{index}/{length}")]
+        public async Task<IActionResult> BuscarUsuario(long seqCliente, int index, int length)
         {
             var usuarios = _mapper.Map<IEnumerable<UsuarioDto>>(await _rep.SelectUsuarios(seqCliente));
 
-            return Ok(usuarios.OrderBy(u => u.SEQ_USUARIOS));
+            return Ok(new Pagination<UsuarioDto>(index, length, usuarios.OrderBy(u => u.SEQ_USUARIOS)));
         }
 
         [HttpGet("BucarValidadeCertificados/{seqCliente}")]
