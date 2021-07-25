@@ -40,7 +40,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     parms.Add("pSEQ_CLIENTE", filtro.SeqCliente);
                     parms.Add("pNOMECLIENTE", filtro.Nome);
                     parms.Add("pCNPJ", filtro.Cnpj);
-                    parms.Add("pSTATUSBLOQ", filtro.Bloqueio == "S" ? 1 : 0);
+                    parms.Add("pSTATUSBLOQ", filtro.Bloqueio == "S" ? 1 : 2);
                     parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                     clientes = await conn.QueryAsync<Cliente>(sql, parms, commandType: CommandType.StoredProcedure);
