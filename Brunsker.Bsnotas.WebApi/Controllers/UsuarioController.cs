@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Brunsker.Bsnotasapi.Domain.Dtos;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
@@ -16,10 +18,13 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
     {
         private readonly IUsuarioServices _services;
         private readonly IUsuarioRepository _rep;
-        public UsuarioController(IUsuarioServices services, IUsuarioRepository rep)
+        private readonly IMapper _mapper;
+
+        public UsuarioController(IUsuarioServices services, IUsuarioRepository rep, IMapper mapper)
         {
             _services = services;
             _rep = rep;
+            _mapper = mapper;
         }
 
         [HttpGet("Current")]
@@ -76,13 +81,36 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             };
         }
 
-        [AllowAnonymous]
         [HttpGet("parametros/{id}")]
         public async Task<IActionResult> GetParametros(long id)
         {
             var parametros = await _rep.SelectParametros(id);
 
             return Ok(parametros);
+        }
+
+        [HttpGet("BucarUsuarios/{seqCliente}")]
+        public async Task<IActionResult> BuscarUsuario(long seqCliente)
+        {
+            var usuarios = _mapper.Map<IEnumerable<UsuarioDto>>(await _rep.SelectUsuarios(seqCliente));
+
+            return Ok(usuarios.OrderBy(u => u.SEQ_USUARIOS));
+        }
+
+        [HttpGet("BucarValidadeCertificados/{seqCliente}")]
+        public async Task<IActionResult> BucarValidadeCertificados(long seqCliente)
+        {
+            var certificados = await _rep.SelectValidadeCertificados(seqCliente);
+
+            return Ok(certificados);
+        }
+
+        [HttpDelete("{seqUsuario}")]
+        public async Task<IActionResult> Remover(long seqUsuario)
+        {
+            await _rep.RemoveUsuario(seqUsuario);
+
+            return Ok();
         }
     }
 }
