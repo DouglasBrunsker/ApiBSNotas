@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotasapi.Domain.Interfaces
 {
-    public interface INfeEntradaService
+    public interface INFService
     {
         Task<Stream> GerarPdfAsync(string xml);
         Task<Stream> GerarCCeAsync(string xml);
         MemoryStream ExportaExcel(IEnumerable<NFeToExport> notas);
-        byte[] ExportaXmls(IEnumerable<NotaFiscalEntrada> notas);
-        Task<byte[]> ExportaPdfs(IEnumerable<NotaFiscalEntrada> notas);
+        byte[] ExportaXmls(IEnumerable<NF> notas);
+        Task<byte[]> ExportaPdfs(IEnumerable<NF> notas);
     }
 }

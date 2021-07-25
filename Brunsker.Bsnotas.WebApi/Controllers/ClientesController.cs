@@ -22,12 +22,12 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpPost("BuscarClientes")]
-        public async Task<IActionResult> BuscarClientes(FiltroPesquisaClientes filtro)
+        [HttpPost("BuscarClientes/{index}/{length}")]
+        public async Task<IActionResult> BuscarClientes(FiltroPesquisaClientes filtro, int index, int length)
         {
             var clientes = await _rep.SelectClientes(filtro);
 
-            return Ok(new Pagination<object>(filtro.Index, filtro.Length, clientes));
+            return Ok(new Pagination<Cliente>(index, length, clientes));
         }
     }
 }

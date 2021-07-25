@@ -11,7 +11,7 @@ namespace Brunsker.Bsnotasapi.Domain.Dtos
         public long NUMNOTA { get; set; }
         public string STATUSPREENT { get; set; }
         public string STATUSNFE { get; set; }
-        public DateTime DTREC { get; set; }
+        public DateTime DTEMISSAO { get; set; }
         public DateTime DTENT { get; set; }
         public string CARTACORRECAONFE { get; set; }
         public string CNPJ_DESTINATARIO { get; set; }

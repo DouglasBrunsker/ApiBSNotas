@@ -7,10 +7,12 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
 {
     public interface INFSaidaRepository
     {
-        Task<IEnumerable<NotaFiscalSaida>> BuscaNotas(FiltroBuscaNotasSaida filtro);
+        Task<IEnumerable<NF>> BuscaNotas(FiltroBuscaNotasSaida filtro);
         Task<IEnumerable<EmpresasCliente>> BuscarEmpresas(long seqCliente);
         Task<IEnumerable<TotalizadorNotasPorDia>> TotalizadorNotasEmitidasDia(FiltroTotalizadores filtro);
         Task<TotalizadorSaida> BuscarTotalizador(FiltroTotalizadores filtro);
         Task<IEnumerable<CFOP>> BuscarCFOPs(long seqCliente);
+        Task<string> SelectArquivoXml(string chave);
+        Task<string> SelectArquivoXmlCCe(string chave);
     }
 }

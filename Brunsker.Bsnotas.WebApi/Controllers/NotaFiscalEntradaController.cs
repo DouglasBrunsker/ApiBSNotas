@@ -23,13 +23,13 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
     public class NotaFiscalEntradaController : ControllerBase
     {
         private readonly INFEntradaRepository _rep;
-        private readonly INfeEntradaService _sevices;
+        private readonly INFService _sevices;
         private readonly IWebHostEnvironment _env;
         private readonly ISefazApiAdapter _sefazServices;
         private readonly ILogger<NotaFiscalEntradaController> _logger;
         private readonly IMapper _mapper;
 
-        public NotaFiscalEntradaController(INFEntradaRepository rep, INfeEntradaService sevices, IWebHostEnvironment env,
+        public NotaFiscalEntradaController(INFEntradaRepository rep, INFService sevices, IWebHostEnvironment env,
                                            ISefazApiAdapter sefazServices, ILogger<NotaFiscalEntradaController> logger, IMapper mapper)
         {
             _rep = rep;
@@ -80,7 +80,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         {
             var nfEntrada = await _rep.BuscarNotasFiscaisEntradaAsync(pesquisa);
 
-            var result = new Pagination<NotaFiscalEntrada>(index, length, nfEntrada);
+            var result = new Pagination<NF>(index, length, nfEntrada);
 
             if (nfEntrada != null)
             {
@@ -166,7 +166,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         }
 
         [HttpPost("ExportaXml")]
-        public IActionResult ExportaXml(IEnumerable<NotaFiscalEntrada> filtro)
+        public IActionResult ExportaXml(IEnumerable<NF> filtro)
         {
             var bytes = _sevices.ExportaXmls(filtro);
 
@@ -178,7 +178,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         }
 
         [HttpPost("ExportaPdfs")]
-        public async Task<IActionResult> ExportaPdf(IEnumerable<NotaFiscalEntrada> filtro)
+        public async Task<IActionResult> ExportaPdf(IEnumerable<NF> filtro)
         {
             var bytes = await _sevices.ExportaPdfs(filtro);
 

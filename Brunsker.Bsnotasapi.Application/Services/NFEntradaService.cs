@@ -18,11 +18,11 @@ using System.Xml;
 
 namespace Brunsker.Bsnotasapi.Application.Services
 {
-    public class NfeEntradaService : INfeEntradaService
+    public class NFService : INFService
     {
-        private readonly ILogger<NfeEntradaService> _logger;
+        private readonly ILogger<INFService> _logger;
 
-        public NfeEntradaService(ILogger<NfeEntradaService> logger)
+        public NFService(ILogger<NFService> logger)
         {
             _logger = logger;
         }
@@ -85,7 +85,7 @@ namespace Brunsker.Bsnotasapi.Application.Services
             }
             return (ms);
         }
-        public byte[] ExportaXmls(IEnumerable<NotaFiscalEntrada> notas)
+        public byte[] ExportaXmls(IEnumerable<NF> notas)
         {
             byte[] bytes = null;
 
@@ -129,7 +129,7 @@ namespace Brunsker.Bsnotasapi.Application.Services
             }
             return bytes;
         }
-        public async Task<byte[]> ExportaPdfs(IEnumerable<NotaFiscalEntrada> notas)
+        public async Task<byte[]> ExportaPdfs(IEnumerable<NF> notas)
         {
             byte[] bytes = null;
 

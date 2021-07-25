@@ -25,9 +25,9 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             _logger = logger;
             _connectionString = _configuration.GetConnectionString("OracleConnection");
         }
-        public async Task<IEnumerable<NotaFiscalSaida>> BuscaNotas(FiltroBuscaNotasSaida filtro)
+        public async Task<IEnumerable<NF>> BuscaNotas(FiltroBuscaNotasSaida filtro)
         {
-            IEnumerable<NotaFiscalSaida> notas = null;
+            IEnumerable<NF> notas = null;
 
             try
             {
@@ -54,7 +54,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
 
                     parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    notas = await conn.QueryAsync<NotaFiscalSaida>(sql, parms, commandType: CommandType.StoredProcedure);
+                    notas = await conn.QueryAsync<NF>(sql, parms, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -178,6 +178,51 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 _logger.LogError(ex.Message);
             }
             return cfops;
+        }
+
+        public async Task<string> SelectArquivoXml(string chave)
+        {
+            string sql = $@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_NFE_SAIDA T WHERE T.CHAVENFE = '{chave}'";
+
+            try
+            {
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var result = await conn.QueryFirstOrDefaultAsync<string>(sql);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return null;
+            }
+        }
+        public async Task<string> SelectArquivoXmlCCe(string chave)
+        {
+            string sql = $@"SELECT CCE.ARQUIVO_XML XML_CONTEUDO FROM BSNT_CCE_NFE CCE WHERE CCE.CHAVE = '{chave}'";
+
+            try
+            {
+                using (var conn = new OracleConnection(_configuration.GetConnectionString("OracleConnectionOld")))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var result = await conn.QueryFirstOrDefaultAsync<string>(sql);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return null;
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace Brunsker.Bsnotas.WebApi.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<NotaFiscalEntrada, NFeToExport>().ReverseMap();
+            CreateMap<NF, NFeToExport>().ReverseMap();
             CreateMap<Usuario, UsuarioDto>().ReverseMap();
         }
     }

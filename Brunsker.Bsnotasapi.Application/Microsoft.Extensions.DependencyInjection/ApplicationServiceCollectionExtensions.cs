@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection addApplicationService(this IServiceCollection services)
         {
-            services.AddScoped<INfeEntradaService, NfeEntradaService>();
+            services.AddScoped<INFService, NFService>();
             services.AddScoped<IUsuarioServices, UsuarioServices>();
 
             return services;

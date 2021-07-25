@@ -113,7 +113,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 return null;
             }
         }
-        public async Task<IEnumerable<NotaFiscalEntrada>> BuscarNotasFiscaisEntradaAsync(ParametrosPesquisaNfEntrada pesquisa)
+        public async Task<IEnumerable<NF>> BuscarNotasFiscaisEntradaAsync(ParametrosPesquisaNfEntrada pesquisa)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                return await conn.QueryAsync<NotaFiscalEntrada>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                return await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
             }
             catch (Exception e)
             {

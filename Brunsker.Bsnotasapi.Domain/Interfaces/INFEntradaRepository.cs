@@ -13,7 +13,7 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<IEnumerable<EmpresasCliente>> BuscarEmpresasAsync(long seqCliente);
         Task<Totalizadores> BuscarTotalizadoresAsync(DateTime dataInicio, DateTime dataFim, int seqCliente);
         Task<IEnumerable<TotalizadorNotasPorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro);
-        Task<IEnumerable<NotaFiscalEntrada>> BuscarNotasFiscaisEntradaAsync(ParametrosPesquisaNfEntrada pesquisa);
+        Task<IEnumerable<NF>> BuscarNotasFiscaisEntradaAsync(ParametrosPesquisaNfEntrada pesquisa);
         Task<IEnumerable<CFOP>> BuscarCfopNotaFiscalEntradaAsync(long seqCliente);
         Task<IEnumerable<DetalheNotaFiscalEntrada>> BuscarDetalhesNotaFiscalEntradaAsync(long seqCliente, string chaveNfe);
         Task<IEnumerable<Fornecedores>> BuscarFornecedoresAsync(long seqCliente);

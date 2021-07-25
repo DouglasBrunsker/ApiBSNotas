@@ -38,9 +38,9 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     var parms = new OracleDynamicParameters();
 
                     parms.Add("pSEQ_CLIENTE", filtro.SeqCliente);
-                    parms.Add("pNOMECLIENTE", filtro.NomeCliente);
+                    parms.Add("pNOMECLIENTE", filtro.Nome);
                     parms.Add("pCNPJ", filtro.Cnpj);
-                    parms.Add("pSTATUSBLOQ", filtro.StatusBloqueio);
+                    parms.Add("pSTATUSBLOQ", filtro.Bloqueio == "S" ? 1 : 0);
                     parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                     clientes = await conn.QueryAsync<Cliente>(sql, parms, commandType: CommandType.StoredProcedure);
