@@ -25,5 +25,6 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<IEnumerable<ItemPedido>> SelectItensPedido(PesquisaItensPedido pesq);
         Task<IEnumerable<object>> BuscarLivroFiscal(ParametroGeracaoLivroFiscal parametro);
         Task<IEnumerable<Contas>> SelectContas(long seqCliente);
+        Task<bool> RemovePreEntrada(string chave);
     }
 }
