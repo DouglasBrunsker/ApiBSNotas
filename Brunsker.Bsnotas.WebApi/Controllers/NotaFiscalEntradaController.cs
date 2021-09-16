@@ -255,5 +255,13 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return Ok(contas);
         }
+
+        [HttpDelete("{chave}")]
+        public async Task<IActionResult> RemovePreEntrada(string chave)
+        {
+            if (await _rep.RemovePreEntrada(chave)) return Ok();
+
+            return BadRequest("Não foi possível remover a pré-entrada.");
+        }
     }
 }

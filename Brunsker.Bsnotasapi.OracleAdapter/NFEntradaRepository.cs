@@ -551,6 +551,32 @@ namespace Brunsker.Bsnotas.OracleAdapter
             }
             return contas;
         }
+        public async Task<bool> RemovePreEntrada(string chave)
+        {
+            try
+            {
+                string sql = "pkg_pre_entrada.PROC_DELETE_PREENTRADA";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parms = new OracleDynamicParameters();
+
+                    parms.Add("pCHAVE", chave);
+
+                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+
+                return false;
+            }
+        }
     }
 }
 
