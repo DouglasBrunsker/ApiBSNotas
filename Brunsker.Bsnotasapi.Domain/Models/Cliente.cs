@@ -12,5 +12,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public string Bloqueio { get; set; }
         public string BloqueioSefaz { get; set; }
         public DateTime? DataValidacao { get; set; }
+        public string LogConsulta { get; set; }
     }
 }
