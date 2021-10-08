@@ -10,6 +10,7 @@ namespace Brunsker.Bsnotas.WebApi.AutoMapper
         {
             CreateMap<NF, NFeToExport>().ReverseMap();
             CreateMap<Usuario, UsuarioDto>().ReverseMap();
+            CreateMap<Cte, CteToExport>().ReverseMap();
         }
     }
 }

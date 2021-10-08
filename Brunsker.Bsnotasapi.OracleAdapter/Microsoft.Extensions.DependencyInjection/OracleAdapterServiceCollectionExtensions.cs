@@ -16,6 +16,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IFornecedorRepository, FornecedorRepository>();
             services.AddTransient<IClienteRepository, ClienteRepository>();
             services.AddTransient<IProdutoRepository, ProdutoRepository>();
+            services.AddTransient<ICteRepository, CteRepository>();
 
             return services;
         }
