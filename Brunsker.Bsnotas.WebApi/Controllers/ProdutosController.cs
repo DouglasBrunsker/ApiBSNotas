@@ -27,7 +27,12 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         {
             var produtos = await _rep.SelectProdutos(filtro);
 
-            return Ok(new Pagination<Produto>(filtro.Index, filtro.Length, produtos));
+            if (produtos != null)
+            {
+                return Ok(new Pagination<Produto>(filtro.Index, filtro.Length, produtos));
+            }
+
+            return NoContent();
         }
     }
 }

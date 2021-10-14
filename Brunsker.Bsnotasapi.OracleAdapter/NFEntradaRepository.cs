@@ -406,6 +406,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     parms.Add("pSEQ_CLIENTE", validar.SEQ_CLIENTE);
                     parms.Add("pCHAVE", validar.CHAVE);
                     parms.Add("pCODFILIAL", validar.CODFILIAL);
+                    parms.Add("pNUMPED", validar.NUMPED);
                     parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                     result = await conn.QueryAsync<ResultadoValidacaoPreEntrada>(sql, parms, commandType: CommandType.StoredProcedure);
