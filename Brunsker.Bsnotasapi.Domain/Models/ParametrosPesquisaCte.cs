@@ -2,7 +2,7 @@ using System;
 
 namespace Brunsker.Bsnotasapi.Domain.Models
 {
-    public class ParametrosPesquisaCteEntrada
+    public class ParametrosPesquisaCte
     {
         public int SEQ_CLIENTE { get; set; }
         public DateTime? DATAINI { get; set; }

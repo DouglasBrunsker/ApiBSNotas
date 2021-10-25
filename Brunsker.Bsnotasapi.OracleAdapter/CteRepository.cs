@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Brunsker.Bsnotas.Domain.Models;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Dapper;
@@ -27,7 +28,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             _connectionString = _configuration.GetConnectionString("OracleConnection");
         }
 
-        public async Task<IEnumerable<Cte>> BuscarCteEntradaAsync(ParametrosPesquisaCteEntrada pesquisa)
+        public async Task<IEnumerable<Cte>> BuscarCteAsync(ParametrosPesquisaCte pesquisa)
         {
             try
             {
@@ -85,6 +86,92 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
+                return null;
+            }
+        }
+        public async Task<IEnumerable<EmpresasCliente>> BuscarEmpresasAsync(long seqCliente)
+        {
+            try
+            {
+                string sql = "pkg_bs_cte_entrada.PESQ_EMPRESAS";
+
+                using OracleConnection conn = new OracleConnection(_connectionString);
+
+                if (conn.State == ConnectionState.Closed) conn.Open();
+
+                OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+
+                dynamicParameters.Add("pSEQ_CLIENTE", seqCliente);
+
+                dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                return await conn.QueryAsync<EmpresasCliente>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+
+                return null;
+            }
+        }
+        public async Task<TotalizadoresCte> BuscarTotalizadoresCteAsync(DateTime? dataInicio, DateTime? dataFim, int seqCliente)
+        {
+            try
+            {
+                string sql = "pkg_bs_cte_entrada.PESQ_TOTALIZADORES";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+
+                    if (conn.State == ConnectionState.Closed) if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+
+                    dynamicParameters.Add("pSEQ_CLIENTE", seqCliente);
+
+                    dynamicParameters.Add("pDATAINI", dataInicio);
+
+                    dynamicParameters.Add("pDATAFIM", dataFim);
+
+                    dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                    return await conn.QueryFirstAsync<TotalizadoresCte>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                }
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+
+                return null;
+            }
+        }
+        public async Task<IEnumerable<TotalizadorNotasPorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro)
+        {
+            string sql = "pkg_bs_cte_entrada.PESQ_CTE_RECEBIDAS_DIA";
+
+            try
+            {
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parameters = new OracleDynamicParameters();
+
+                    parameters.Add("pSEQ_CLIENTE", filtro.SeqCliente);
+                    parameters.Add("pDATAINI", filtro.DataInicial);
+                    parameters.Add("pDATAFIM", filtro.DataFinal);
+                    parameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                    var result = await conn.QueryAsync<TotalizadorNotasPorDia>(sql, parameters, commandType: CommandType.StoredProcedure);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
                 return null;
             }
         }
