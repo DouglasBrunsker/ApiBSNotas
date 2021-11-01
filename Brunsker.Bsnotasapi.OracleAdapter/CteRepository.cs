@@ -146,7 +146,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 return null;
             }
         }
-        public async Task<IEnumerable<TotalizadorNotasPorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro)
+        public async Task<IEnumerable<TotalizadorCtePorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro)
         {
             string sql = "pkg_bs_cte_entrada.PESQ_CTE_RECEBIDAS_DIA";
 
@@ -163,7 +163,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     parameters.Add("pDATAFIM", filtro.DataFinal);
                     parameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    var result = await conn.QueryAsync<TotalizadorNotasPorDia>(sql, parameters, commandType: CommandType.StoredProcedure);
+                    var result = await conn.QueryAsync<TotalizadorCtePorDia>(sql, parameters, commandType: CommandType.StoredProcedure);
 
                     return result;
                 }
