@@ -175,6 +175,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 dynamicParameters.Add("pSTATUSMANIFCONFIRMADA", pesquisa.STATUSMANIFCONFIRMADA == true ? 1 : 0);
                 dynamicParameters.Add("pSTATUSMANIFDESCONHECIDA", pesquisa.STATUSMANIFDESCONHECIDA == true ? 1 : 0);
                 dynamicParameters.Add("pSTATUSMANIFNAOREALIZADA", pesquisa.STATUSMANIFNAOREALIZADA == true ? 1 : 0);
+                dynamicParameters.Add("pNFUSOECONSUMO", pesquisa.NFUSOECONSUMO == true ? 1 : 0);
                 dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
