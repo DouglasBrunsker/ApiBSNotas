@@ -35,6 +35,7 @@ namespace Brunsker.Bsnotas.Domain.Models
         public bool? STATUSMANIFCONFIRMADA { get; set; }
         public bool? STATUSMANIFDESCONHECIDA { get; set; }
         public bool? STATUSMANIFNAOREALIZADA { get; set; }
+        public bool? NFUSOECONSUMO { get; set; }
         public string[] EMPRESASCADASTRADAS { get; set; }
     }
 }
