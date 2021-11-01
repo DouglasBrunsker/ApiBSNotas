@@ -6,8 +6,8 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public string DESCRICAO { get; set; }
         public string EMBALAGEM { get; set; }
         public string UNIDADE { get; set; }
-        public int QTPEDIDA { get; set; }
-        public int QTPENTREGUE { get; set; }
+        public decimal QTPEDIDA { get; set; }
+        public decimal QTPENTREGUE { get; set; }
         public double PCOMPRA { get; set; }
         public int NUMSEQ { get; set; }
     }
