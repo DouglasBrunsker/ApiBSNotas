@@ -4,22 +4,26 @@ namespace Brunsker.Bsnotasapi.Domain.Dtos
 {
     public class CteToExport
     {
-        public string CHAVE { get; set; }
+        public long SeqSituacaoCte { get; set; }
+        public string Chave { get; set; }
+        public long CodigoTpCte { get; set; }
+        public long CodigoTomador { get; set; }
+        public long SEQ_EMITENTE_CTE { get; set; }
+        public long NUMERO_CTE { get; set; }
+        public DateTime? DT_RECEBIMENTO { get; set; }
+        public DateTime? DT_LEITURA { get; set; }
+        public string ARQUIVO_XML { get; set; }
+        public DateTime? DT_VALIDACAO { get; set; }
         public string CNPJ_EMITENTE { get; set; }
-        public string EMITENTE { get; set; }
-        public string STATUSMANIF { get; set; }
-        public long NUMNOTA { get; set; }
-        public string STATUSPREENT { get; set; }
-        public string STATUSNFE { get; set; }
-        public DateTime? DTEMISSAO { get; set; }
-        public DateTime? DTENT { get; set; }
-        public string CARTACORRECAONFE { get; set; }
-        public string CNPJ_DESTINATARIO { get; set; }
-        public string DESTINATARIO { get; set; }
-        public string NUMTRANSACAO { get; set; }
-        public string CFOP { get; set; }
-        public string NUMPED { get; set; }
-        public decimal VALORNF { get; set; }
-        public string TIPONOTA { get; set; }
+        public string EMITENTE{ get; set; }
+        public long CODUF_CTE { get; set; }
+        public string DT_EMISSAO { get; set; }
+        public string NAT_OP { get; set; }
+        public decimal VALOR_TOTAL_CTE { get; set; }
+        public decimal VALOR_RECEBER_CTE { get; set; }
+        public long CFOP { get; set; }
+        public long SEQ_MANIFESTACAO_CTE { get; set; }
+        public string TOMADOR { get; set; }
+        public string CNPJ_TOMADOR { get; set; }
     }
 }

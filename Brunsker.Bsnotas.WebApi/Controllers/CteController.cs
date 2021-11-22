@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Brunsker.Bsnotas.WebApi.Helpers;
+using Brunsker.Bsnotasapi.Domain.Dtos;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -73,6 +75,19 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             if (ctes != null)
             {
                 return Ok(result);
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost("BuscarNFeVinculadasCTe/")]
+        public async Task<IActionResult> BuscarNFeVinculadasCTeAsync(NfeVinculadasCTe pesquisa)
+        {
+            var chaves = await _rep.BuscarNFeVinculadasCTeAsync(pesquisa);
+
+            if (chaves != null)
+            {
+                return Ok(chaves);
             }
 
             return NoContent();

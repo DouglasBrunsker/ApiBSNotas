@@ -12,6 +12,6 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<TotalizadoresCte> BuscarTotalizadoresCteAsync(DateTime? dataInicio, DateTime? dataFim, int seqCliente);
         Task<IEnumerable<EmpresasCliente>> BuscarEmpresasAsync(long seqCliente);
         Task<IEnumerable<TotalizadorCtePorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro);
-        
+        Task<IEnumerable<NfeVinculadasCTe>> BuscarNFeVinculadasCTeAsync(NfeVinculadasCTe pesquisa);
     }
 }

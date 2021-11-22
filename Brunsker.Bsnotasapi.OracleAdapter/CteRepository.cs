@@ -32,27 +32,6 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
         {
             try
             {
-                string empresas = null;
-
-                DateTime? dataEntradaIni = null;
-                DateTime? dataEntradaFim = null;
-
-                if (pesquisa?.DTENT?.Length > 0)
-                {
-                    dataEntradaIni = pesquisa.DTENT[0];
-                    dataEntradaFim = pesquisa.DTENT[1];
-                }
-
-                if (pesquisa?.EMPRESASCADASTRADAS?.Length > 0)
-                {
-
-                    for (int i = 0; i < pesquisa.EMPRESASCADASTRADAS.Length; i++)
-                    {
-                        empresas += pesquisa.EMPRESASCADASTRADAS[i] + ",";
-                    }
-                    empresas = empresas.Substring(0, empresas.LastIndexOf(','));
-                }
-
                 using OracleConnection conn = new OracleConnection(_connectionString);
 
                 conn.Open();
@@ -78,7 +57,6 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 dynamicParameters.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);                
                 dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJDEST);                
                 dynamicParameters.Add("pNOMEDEST", pesquisa.NOMEDEST);                
-                dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                 return await conn.QueryAsync<Cte>("pkg_bs_cte_entrada.PESQ_CTENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
@@ -164,6 +142,34 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     parameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                     var result = await conn.QueryAsync<TotalizadorCtePorDia>(sql, parameters, commandType: CommandType.StoredProcedure);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return null;
+            }
+        }
+        public async Task<IEnumerable<NfeVinculadasCTe>> BuscarNFeVinculadasCTeAsync(NfeVinculadasCTe pesquisa)
+        {
+            string sql = "pkg_bs_cte_entrada.PESQ_NFES_VINCULADAS_CTE";
+
+            try
+            {
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parameters = new OracleDynamicParameters();
+
+                    parameters.Add("pSEQ_CLIENTE", pesquisa.SEQ_CLIENTE);
+                    parameters.Add("pCHAVECTE", pesquisa.CHAVECTE);
+                    parameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                    var result = await conn.QueryAsync<NfeVinculadasCTe>(sql, parameters, commandType: CommandType.StoredProcedure);
 
                     return result;
                 }
