@@ -13,5 +13,6 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<IEnumerable<EmpresasCliente>> BuscarEmpresasAsync(long seqCliente);
         Task<IEnumerable<TotalizadorCtePorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro);
         Task<IEnumerable<NfeVinculadasCTe>> BuscarNFeVinculadasCTeAsync(NfeVinculadasCTe pesquisa);
+        Task<string> SelectArquivoXml(string chave);
     }
 }

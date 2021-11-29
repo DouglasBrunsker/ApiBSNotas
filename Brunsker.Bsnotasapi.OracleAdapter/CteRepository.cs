@@ -181,5 +181,27 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 return null;
             }
         }
+        public async Task<string> SelectArquivoXml(string chave)
+        {
+            string sql = $@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_CTE_ENTRADA t WHERE T.CHAVECTE = '{chave}'";
+
+            try
+            {
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var result = await conn.QueryFirstOrDefaultAsync<string>(sql);
+
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return null;
+            }
+        }
     }
 }

@@ -21,13 +21,15 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly ILogger<CteController> _logger;
         private readonly IMapper _mapper;
+        private readonly INFService _services;
 
-        public CteController(ICteRepository rep, IWebHostEnvironment env, ILogger<CteController> logger, IMapper mapper)
+        public CteController(ICteRepository rep, IWebHostEnvironment env, ILogger<CteController> logger, IMapper mapper, INFService services)
         {
             _rep = rep;
             _env = env;
             _logger = logger;
             _mapper = mapper;
+            _services = services;
         }
 
         [HttpGet("BuscarEmpresas/{seqCliente}")]
@@ -88,6 +90,23 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             if (chaves != null)
             {
                 return Ok(chaves);
+            }
+
+            return NoContent();
+        }
+
+        [HttpGet("GerarPdf/{chave}")]
+        public async Task<IActionResult> GerarPdfAsync(string chave)
+        {
+            string xml = await _rep.SelectArquivoXml(chave);
+
+            var pdf = await _services.GerarPdfAsync(xml);
+
+            if (pdf != null)
+            {
+                var file = File(pdf, "application/pdf");
+
+                return file;
             }
 
             return NoContent();
