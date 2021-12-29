@@ -21,9 +21,9 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         private readonly IWebHostEnvironment _env;
         private readonly ILogger<CteController> _logger;
         private readonly IMapper _mapper;
-        private readonly INFService _services;
+        private readonly ICteService _services;
 
-        public CteController(ICteRepository rep, IWebHostEnvironment env, ILogger<CteController> logger, IMapper mapper, INFService services)
+        public CteController(ICteRepository rep, IWebHostEnvironment env, ILogger<CteController> logger, IMapper mapper, ICteService services)
         {
             _rep = rep;
             _env = env;

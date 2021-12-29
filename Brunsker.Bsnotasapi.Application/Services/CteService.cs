@@ -27,7 +27,7 @@ namespace Brunsker.Bsnotasapi.Application.Services
 
                     var content = new StringContent("&xml_conteudo=" + HttpUtility.UrlEncode(xml), System.Text.Encoding.UTF8, "application/x-www-form-urlencoded");
 
-                    HttpResponseMessage response = await http.PostAsync("http://portal.brunsker.com.br:1234/testaDanfe.php", content);
+                    HttpResponseMessage response = await http.PostAsync("http://portal.brunsker.com.br:1234/testaDaCTe.php", content);
 
                     response.EnsureSuccessStatusCode();
 
