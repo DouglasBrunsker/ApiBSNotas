@@ -32,6 +32,18 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
         {
             try
             {
+                string empresas = null;
+
+                if (pesquisa?.EMPRESASCADASTRADAS?.Length > 0)
+                {
+
+                    for (int i = 0; i < pesquisa.EMPRESASCADASTRADAS.Length; i++)
+                    {
+                        empresas += pesquisa.EMPRESASCADASTRADAS[i] + ",";
+                    }
+                    empresas = empresas.Substring(0, empresas.LastIndexOf(','));
+                }
+
                 using OracleConnection conn = new OracleConnection(_connectionString);
 
                 conn.Open();
@@ -57,6 +69,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 dynamicParameters.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);                
                 dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJDEST);                
                 dynamicParameters.Add("pNOMEDEST", pesquisa.NOMEDEST);                
+                dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);                
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                 return await conn.QueryAsync<Cte>("pkg_bs_cte_entrada.PESQ_CTENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);

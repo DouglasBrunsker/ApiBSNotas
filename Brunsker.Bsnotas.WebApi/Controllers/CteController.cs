@@ -111,5 +111,29 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("ExportaPdfs")]
+        public async Task<IActionResult> ExportaPdf(IEnumerable<Cte> filtro)
+        {
+            var bytes = await _services.ExportaPdfs(filtro);
+
+            if (bytes.Length > 0)
+            {
+                return File(bytes, "application/zip", "DaCTes.zip");
+            }
+            return NoContent();
+        }
+
+        [HttpPost("ExportaXml")]
+        public IActionResult ExportaXml(IEnumerable<Cte> filtro)
+        {
+            var bytes = _services.ExportaXmls(filtro);
+
+            if (bytes.Length > 0)
+            {
+                return File(bytes, "application/zip");
+            }
+            return NoContent();
+        }
     }
 }
