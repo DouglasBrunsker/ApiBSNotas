@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Brunsker.Bsnotas.WebApi.Helpers;
@@ -134,6 +135,22 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
                 return File(bytes, "application/zip");
             }
             return NoContent();
+        }
+
+        [HttpPost("ExportaExcel")]
+        public async Task<IActionResult> ExportaExcelAsync(ParametrosPesquisaCte filtro)
+        {
+            var ctes = await _rep.BuscarCteAsync(filtro);
+
+            var ctesDto = _mapper.Map<IEnumerable<CteToExport>>(ctes);
+
+            MemoryStream excelMemoryStream = _services.ExportaExcel(ctesDto);
+
+            if (excelMemoryStream == null)
+            {
+                return NoContent();
+            }
+            return File(excelMemoryStream, "application/vnd.ms-excel");
         }
     }
 }

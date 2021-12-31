@@ -14,6 +14,7 @@ using System.Web;
 using System.Xml;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
+using Brunsker.Bsnotasapi.Domain.Dtos;
 
 namespace Brunsker.Bsnotasapi.Application.Services
 {
@@ -149,6 +150,39 @@ namespace Brunsker.Bsnotasapi.Application.Services
                 _logger.LogError(ex.Message);
             }
             return bytes;
+        }
+        public MemoryStream ExportaExcel(IEnumerable<CteToExport> ctes)
+        {
+            MemoryStream ms = new MemoryStream();
+            try
+            {
+                if (ctes.Any())
+                {
+                    using (ExcelPackage pack = new ExcelPackage(ms))
+                    {
+                        ExcelWorksheet ws = pack.Workbook.Worksheets.Add("CTe");
+
+                        ws.Cells["A1"].LoadFromCollection(ctes, true);
+
+                        ws.Cells.AutoFitColumns();
+
+                        ws.Row(1).Style.Font.Bold = true;
+
+                        ws.Row(1).Style.Fill.PatternType = ExcelFillStyle.Solid;
+
+                        ws.Row(1).Style.Fill.BackgroundColor.SetColor(Color.MediumSeaGreen);
+
+                        pack.Save();
+
+                        ms.Position = 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+            return (ms);
         }
     }
 }
