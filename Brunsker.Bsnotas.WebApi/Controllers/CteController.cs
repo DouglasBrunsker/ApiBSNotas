@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Brunsker.Bsnotas.WebApi.Helpers;
@@ -23,14 +25,16 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         private readonly ILogger<CteController> _logger;
         private readonly IMapper _mapper;
         private readonly ICteService _services;
+        private readonly ICteSefazAdapter _sefazServices;
 
-        public CteController(ICteRepository rep, IWebHostEnvironment env, ILogger<CteController> logger, IMapper mapper, ICteService services)
+        public CteController(ICteRepository rep, IWebHostEnvironment env, ILogger<CteController> logger, IMapper mapper, ICteService services, ICteSefazAdapter sefazServices)
         {
             _rep = rep;
             _env = env;
             _logger = logger;
             _mapper = mapper;
             _services = services;
+            _sefazServices = sefazServices;
         }
 
         [HttpGet("BuscarEmpresas/{seqCliente}")]
@@ -151,6 +155,27 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
                 return NoContent();
             }
             return File(excelMemoryStream, "application/vnd.ms-excel");
+        }
+
+        [HttpPost("Manifestacao")]
+        public async Task<IActionResult> Manifestacao(IEnumerable<Manifestacao> manifestacoes)
+        {
+            try
+            {
+                if (manifestacoes.Any())
+                {
+                    foreach (var manifestacao in manifestacoes)
+                    {
+                        await _sefazServices.ManifestaCte(manifestacao, Path.Combine(_env.WebRootPath, "certificados/"));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
+
+            return Ok();
         }
     }
 }
