@@ -216,5 +216,34 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 return null;
             }
         }
+
+        public async Task<RecepcaoEventoCte> SelectRelacaoWebServices(int seq_cliente, string cnpj, int tpAmb)
+        {
+            RecepcaoEventoCte recepcao = null;
+
+            try
+            {
+                string sql = "pkg_webserv_insert_bsnotas.SELECT_RELACAO_WS_CTE";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parms = new OracleDynamicParameters();
+
+                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    parms.Add("pSEQ_CLIENTE", seq_cliente);
+                    parms.Add("pCNPJ", cnpj);
+                    parms.Add("pTPAMB", tpAmb);
+
+                    recepcao = await conn.QueryFirstOrDefaultAsync<RecepcaoEventoCte>(sql, parms, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+            return recepcao;
+        }
     }
 }
