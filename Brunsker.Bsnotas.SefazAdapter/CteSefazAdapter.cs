@@ -31,7 +31,7 @@ namespace Brunsker.Bsnotas.SefazAdapter
             {
                 var tipoManifestacao = manifestacao.Codigo.Split('-');
 
-                var recepcao = await _rep.SelectRelacaoWebServices(manifestacao.SeqCliente, manifestacao.CnpjDestinatario, 2);
+                var recepcao = await _rep.SelectRelacaoWebServices(manifestacao.SeqCliente, manifestacao.CnpjDestinatario, 2);//1-produçao; 2-homologação
 
                 if (recepcao != null)
                 {
@@ -43,7 +43,12 @@ namespace Brunsker.Bsnotas.SefazAdapter
                     recepcao.JUSTIF = manifestacao.Justificativa;
                     recepcao.CERTIFICADO_DIGITAL = webRootPath + recepcao.CERTIFICADO_DIGITAL;
 
-                    var resultado = RequestRecepcaoEvento(recepcao);
+                    var resultado = RequestRecepcaoEvento(recepcao, manifestacao.SeqCliente);
+
+                    if(resultado.cStat.Equals("135"))
+                    {
+                        await _rep.ConfirmaManifestacaoCte(resultado.cStat, resultado.dhRegEvento, resultado.nProt, resultado.chCTe, manifestacao.SeqCliente, resultado.xMotivo);
+                    }
                 }
             }
             catch (Exception ex)
@@ -52,7 +57,7 @@ namespace Brunsker.Bsnotas.SefazAdapter
             }
         }
 
-        private ResultadoCTe RequestRecepcaoEvento(RecepcaoEventoCte recepcao)
+        private ResultadoCTe RequestRecepcaoEvento(RecepcaoEventoCte recepcao, int seqCliente)
         {
             string msg_padrao = "<eventoCTe  xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"" + recepcao.VERSAO_EVENTO + "\">"
                     + "<infEvento Id=\"ID" + recepcao.TPEVENTO + recepcao.CHAVE + "01\">"
@@ -120,6 +125,8 @@ namespace Brunsker.Bsnotas.SefazAdapter
             }
             if (retorno.cStat != "135")
             {
+                LogErroManifestacaoCte(retorno.cStat, retorno.xMotivo, recepcao.CHAVE, seqCliente);
+
                 _logger.LogError("cSat: " + retorno.cStat + " | " + retorno.xMotivo);
             }
             return (retorno);
@@ -229,6 +236,10 @@ namespace Brunsker.Bsnotas.SefazAdapter
 
                 return null;
             }
+        }
+        private async void LogErroManifestacaoCte(string cStat, string xMotivo, string chCte, int seqCliente)
+        {
+            await _rep.LogErroManifestacaoCte(cStat, xMotivo, chCte, seqCliente);
         }
     }
 }

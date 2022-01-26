@@ -55,7 +55,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 dynamicParameters.Add("pDATAINI", pesquisa.DATAINI);
                 dynamicParameters.Add("pDATAFIM", pesquisa.DATAFIM);
                 dynamicParameters.Add("pUF", pesquisa.UF);
-                dynamicParameters.Add("pNUMNOTA", pesquisa.NUMNOTA);                
+                dynamicParameters.Add("pNUMNOTA", pesquisa.NUMCTE);                
                 dynamicParameters.Add("pEXIBIRCTEMANIFACORDO", pesquisa.EXIBIRCTEMANIFACORDO == true ? 1 : 0);                
                 dynamicParameters.Add("pEXIBIRCTECARTACORRECAO", pesquisa.EXIBIRCTECARTACORRECAO == true ? 1 : 0);                
                 dynamicParameters.Add("pEXIBIRCTECLITOMADOR", pesquisa.EXIBIRCTECLITOMADOR == true ? 1 : 0);                
@@ -67,7 +67,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 dynamicParameters.Add("pCHAVECTE", pesquisa.CHAVECTE);                
                 dynamicParameters.Add("pCNPJEMITENTE", pesquisa.CNPJEMITENTE);                
                 dynamicParameters.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);                
-                dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJDEST);                
+                dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJTOMADOR);                
                 dynamicParameters.Add("pNOMEDEST", pesquisa.NOMEDEST);                
                 dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);                
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
@@ -244,6 +244,60 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 _logger.LogError(ex.Message);
             }
             return recepcao;
+        }
+
+        public async Task ConfirmaManifestacaoCte(string cStat, string dhRegEvento, string nProt, string chCTe, int seqCliente, string xMotivo)
+        {
+            try
+            {
+                string sql = "pkg_bs_cte_entrada.CONFIRMA_MANIFESTACAO_CTE";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parms = new OracleDynamicParameters();
+
+                    parms.Add("pCODSTATUS", cStat);
+                    parms.Add("pDTREGEVENTO", DateTime.Parse(dhRegEvento));
+                    parms.Add("pNPROTOCOLO", nProt);
+                    parms.Add("pCHCTE", chCTe);
+                    parms.Add("pSEQCLIENTE", seqCliente);
+                    parms.Add("pLOG", xMotivo);
+
+                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
+        }
+
+        public async Task LogErroManifestacaoCte(string cStat, string xMotivo, string chCTe, int seqCliente)
+        {
+            try
+            {
+                string sql = "pkg_bs_cte_entrada.ERRO_MANIFESTACAO_CTE";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parms = new OracleDynamicParameters();
+
+                    parms.Add("pCODSTATUS", cStat);
+                    parms.Add("pCHCTE", chCTe);
+                    parms.Add("pSEQCLIENTE", seqCliente);
+                    parms.Add("pLOG", xMotivo);
+
+                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+            }
         }
     }
 }

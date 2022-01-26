@@ -7,10 +7,8 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public int SEQ_CLIENTE { get; set; }
         public DateTime? DATAINI { get; set; }
         public DateTime? DATAFIM { get; set; }
-        public DateTime[] DTENT { get; set; }
-        public DateTime[] DTEMISSAO { get; set; }
         public string UF { get; set; }
-        public long? NUMNOTA { get; set; }
+        public long? NUMCTE { get; set; }
         public bool? EXIBIRCTEMANIFACORDO { get; set; }
         public bool? EXIBIRCTECARTACORRECAO { get; set; }
         public bool? EXIBIRCTECLITOMADOR { get; set; }
@@ -22,7 +20,7 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public string CHAVECTE { get; set; }
         public string CNPJEMITENTE { get; set; }
         public string NOMEEMITENTE { get; set; }
-        public string CNPJDEST { get; set; }
+        public string CNPJTOMADOR { get; set; }
         public string NOMEDEST { get; set; }
         public string[] EMPRESASCADASTRADAS { get; set; }
     }

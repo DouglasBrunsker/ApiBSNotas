@@ -25,5 +25,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public long SEQ_MANIFESTACAO_CTE { get; set; }
         public string TOMADOR { get; set; }
         public string CNPJ_TOMADOR { get; set; }
+        public string PROTOCOLO_MANIFESTACAO { get; set; }
     }
 }
