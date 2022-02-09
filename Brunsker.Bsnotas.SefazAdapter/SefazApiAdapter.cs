@@ -38,7 +38,7 @@ namespace Brunsker.Bsnotas.SefazAdapter
                     recepcao.TPEVENTO = tipoManifestacao[0];
                     recepcao.DESCEVENTO = tipoManifestacao[1];
                     recepcao.DHEVENTO = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss") + "-03:00";
-                    recepcao.JUSTIF = manifestacao.Justificativa.Trim();
+                    recepcao.JUSTIF = manifestacao.Justificativa == null ? null : manifestacao.Justificativa.Trim();
                     recepcao.CERTIFICADO_DIGITAL = webRootPath + recepcao.CERTIFICADO_DIGITAL;
 
                     var resultado = RequestRecepcaoEvento(recepcao);
