@@ -47,7 +47,7 @@ namespace Brunsker.Bsnotas.SefazAdapter
 
                     if(resultado.cStat.Equals("135"))
                     {
-                        await _rep.ConfirmaManifestacaoCte(resultado.cStat, resultado.dhRegEvento, resultado.nProt, resultado.chCTe, manifestacao.SeqCliente, resultado.xMotivo);
+                        await _rep.ConfirmaManifestacaoCte(resultado.cStat, resultado.dhRegEvento, resultado.nProt, resultado.chCTe, manifestacao.SeqCliente, resultado.xMotivo, recepcao.TPEVENTO);
                     }
                 }
             }

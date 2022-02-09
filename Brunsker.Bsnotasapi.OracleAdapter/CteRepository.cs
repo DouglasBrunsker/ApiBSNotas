@@ -246,7 +246,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             return recepcao;
         }
 
-        public async Task ConfirmaManifestacaoCte(string cStat, string dhRegEvento, string nProt, string chCTe, int seqCliente, string xMotivo)
+        public async Task ConfirmaManifestacaoCte(string cStat, string dhRegEvento, string nProt, string chCTe, int seqCliente, string xMotivo, string tpEvento)
         {
             try
             {
@@ -264,6 +264,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     parms.Add("pCHCTE", chCTe);
                     parms.Add("pSEQCLIENTE", seqCliente);
                     parms.Add("pLOG", xMotivo);
+                    parms.Add("pTPEVENTO", int.Parse(tpEvento));
 
                     await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
                 }
