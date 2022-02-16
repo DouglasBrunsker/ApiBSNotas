@@ -439,6 +439,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     parms.Add("pQTDE", item.QTPENTREGUE == 0 ? null : item.QTPENTREGUE);
                     parms.Add("pNUMPEDPREENT", item.NUMPED == 0 ? null : item.NUMPED);
                     parms.Add("pMSG", item.Mensagem);
+                    parms.Add("pCODFORNEC", item.codFornec == 0 ? null : item.codFornec);
 
                     await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
                 }
@@ -578,6 +579,34 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
                 return false;
             }
+        }
+
+        public async Task<IEnumerable<FornecedoresAssociados>> SelectFornecedoresAssociados(long seqCliente, string cnpj)
+        {
+            IEnumerable<FornecedoresAssociados> fornecedores = null;
+
+            try
+            {
+                string sql = "pkg_pre_entrada.PROC_EXIBIR_FORNEC";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+
+                    var parms = new OracleDynamicParameters();
+
+                    parms.Add("pSEQ_CLIENTE", seqCliente);
+                    parms.Add("pCNPJEMITENTE", cnpj);
+                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                    fornecedores = await conn.QueryAsync<FornecedoresAssociados>(sql, parms, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
+            return fornecedores;
         }
     }
 }

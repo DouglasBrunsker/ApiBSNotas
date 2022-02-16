@@ -10,5 +10,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public int? NUMSEQ { get; set; }
         public string PREENTSEMVINCULOPED { get; set; }
         public string Mensagem { get; set; }
+        public long? codFornec { get; set; }
     }
 }
