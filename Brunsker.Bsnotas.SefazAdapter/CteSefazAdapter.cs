@@ -45,7 +45,7 @@ namespace Brunsker.Bsnotas.SefazAdapter
 
                     var resultado = RequestRecepcaoEvento(recepcao, manifestacao.SeqCliente);
 
-                    if(resultado.cStat.Equals("135"))
+                    if(resultado.cStat.Equals("135") || resultado.cStat.Equals("631"))
                     {
                         await _rep.ConfirmaManifestacaoCte(resultado.cStat, resultado.dhRegEvento, resultado.nProt, resultado.chCTe, manifestacao.SeqCliente, resultado.xMotivo, recepcao.TPEVENTO);
                     }
