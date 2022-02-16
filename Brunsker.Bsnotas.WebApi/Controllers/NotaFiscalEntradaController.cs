@@ -263,5 +263,13 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return BadRequest("Não foi possível remover a pré-entrada.");
         }
+        
+        [HttpGet("BuscaFornecedoresAssociados/{seqCliente}/{cnpj}")]
+        public async Task<IEnumerable<FornecedoresAssociados>> BuscaFornecedoresAssociados(long seqCliente, string cnpj)
+        {
+            var fornecedores = await _rep.SelectFornecedoresAssociados(seqCliente, cnpj);
+
+            return fornecedores;
+        }
     }
 }
