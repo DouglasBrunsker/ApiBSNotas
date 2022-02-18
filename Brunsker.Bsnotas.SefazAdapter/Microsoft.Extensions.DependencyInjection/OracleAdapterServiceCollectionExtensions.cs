@@ -12,6 +12,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddScoped<ISefazApiAdapter, SefazApiAdapter>();
 
+            services.AddScoped<ICteSefazAdapter, CteSefazAdapter>();
+
             return services;
         }
     }

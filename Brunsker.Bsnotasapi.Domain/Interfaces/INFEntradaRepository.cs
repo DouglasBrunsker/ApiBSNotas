@@ -11,7 +11,7 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<string> SelectArquivoXml(string chave);
         Task<string> SelectArquivoXmlCCe(string chave);
         Task<IEnumerable<EmpresasCliente>> BuscarEmpresasAsync(long seqCliente);
-        Task<Totalizadores> BuscarTotalizadoresAsync(DateTime dataInicio, DateTime dataFim, int seqCliente);
+        Task<Totalizadores> BuscarTotalizadoresAsync(DateTime? dataInicio, DateTime? dataFim, int seqCliente);
         Task<IEnumerable<TotalizadorNotasPorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro);
         Task<IEnumerable<NF>> BuscarNotasFiscaisEntradaAsync(ParametrosPesquisaNfEntrada pesquisa);
         Task<IEnumerable<CFOP>> BuscarCfopNotaFiscalEntradaAsync(long seqCliente);

@@ -52,7 +52,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 return null;
             }
         }
-        public async Task<Totalizadores> BuscarTotalizadoresAsync(DateTime dataInicio, DateTime dataFim, int seqCliente)
+        public async Task<Totalizadores> BuscarTotalizadoresAsync(DateTime? dataInicio, DateTime? dataFim, int seqCliente)
         {
 
             try
