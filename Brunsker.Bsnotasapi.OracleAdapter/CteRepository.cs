@@ -260,7 +260,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     var parms = new OracleDynamicParameters();
 
                     parms.Add("pCODSTATUS", cStat);
-                    parms.Add("pDTREGEVENTO", DateTime.Parse(dhRegEvento));
+                    parms.Add("pDTREGEVENTO", Convert.ToDateTime(dhRegEvento).ToUniversalTime());
                     parms.Add("pNPROTOCOLO", nProt);
                     parms.Add("pCHCTE", chCTe);
                     parms.Add("pSEQCLIENTE", seqCliente);
