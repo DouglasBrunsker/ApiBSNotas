@@ -14,7 +14,7 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<IEnumerable<TotalizadorCtePorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro);
         Task<IEnumerable<NfeVinculadasCTe>> BuscarNFeVinculadasCTeAsync(NfeVinculadasCTe pesquisa);
         Task<string> SelectArquivoXml(string chave);
-        Task<RecepcaoEventoCte> SelectRelacaoWebServices(int seq_cliente, string cnpj, int tpAmb);
+        Task<RecepcaoEventoCte> SelectRelacaoWebServices(int seq_cliente, string cnpj, int tpAmb, int codUf);
         Task ConfirmaManifestacaoCte(string cStat, string dhRegEvento, string nProt, string chCTe, int seqCliente, string log, string tpEvento);
         Task LogErroManifestacaoCte(string cStat, string xMotivo, string chCte, int seqCliente);
     }

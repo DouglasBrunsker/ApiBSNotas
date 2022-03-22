@@ -217,7 +217,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             }
         }
 
-        public async Task<RecepcaoEventoCte> SelectRelacaoWebServices(int seq_cliente, string cnpj, int tpAmb)
+        public async Task<RecepcaoEventoCte> SelectRelacaoWebServices(int seq_cliente, string cnpj, int tpAmb, int codUf)
         {
             RecepcaoEventoCte recepcao = null;
 
@@ -235,6 +235,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     parms.Add("pSEQ_CLIENTE", seq_cliente);
                     parms.Add("pCNPJ", cnpj);
                     parms.Add("pTPAMB", tpAmb);
+                    parms.Add("pCODUF", codUf);
 
                     recepcao = await conn.QueryFirstOrDefaultAsync<RecepcaoEventoCte>(sql, parms, commandType: CommandType.StoredProcedure);
                 }

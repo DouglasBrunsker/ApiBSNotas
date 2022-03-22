@@ -9,7 +9,7 @@ namespace Brunsker.Bsnotas.Domain.Models
         public string VERSAO_EVENTO { get; set; }
         public string URL { get; set; }
         public string CORGAO { get; set; }
-        public int TPAMB { get; set; }
+        public string TPAMB { get; set; }
         public string TPEVENTO { get; set; }
         public string DESCEVENTO { get; set; }
         public string JUSTIF { get; set; }

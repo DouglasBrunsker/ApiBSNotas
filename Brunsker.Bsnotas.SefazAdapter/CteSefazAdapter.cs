@@ -31,7 +31,9 @@ namespace Brunsker.Bsnotas.SefazAdapter
             {
                 var tipoManifestacao = manifestacao.Codigo.Split('-');
 
-                var recepcao = await _rep.SelectRelacaoWebServices(manifestacao.SeqCliente, manifestacao.CnpjDestinatario, 2);//1-produçao; 2-homologação
+                var ufAutorizacao = manifestacao.Chave.Substring(0, 2);
+
+                var recepcao = await _rep.SelectRelacaoWebServices(manifestacao.SeqCliente, manifestacao.CnpjDestinatario, 1, int.Parse(ufAutorizacao));//1-produçao; 2-homologação
 
                 if (recepcao != null)
                 {
@@ -62,7 +64,7 @@ namespace Brunsker.Bsnotas.SefazAdapter
             string msg_padrao = "<eventoCTe  xmlns=\"http://www.portalfiscal.inf.br/cte\" versao=\"" + recepcao.VERSAO_EVENTO + "\">"
                     + "<infEvento Id=\"ID" + recepcao.TPEVENTO + recepcao.CHAVE + "01\">"
                     + "<cOrgao>"+ recepcao.CORGAO + "</cOrgao>"
-                    + "<tpAmb>" + recepcao.TPAMB.ToString() + "</tpAmb>"
+                    + "<tpAmb>" + recepcao.TPAMB + "</tpAmb>"
                     + "<CNPJ>" + recepcao.CNPJ + "</CNPJ>"
                     + "<chCTe>" + recepcao.CHAVE + "</chCTe>"
                     + "<dhEvento>" + recepcao.DHEVENTO + "</dhEvento>"
