@@ -247,7 +247,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             return recepcao;
         }
 
-        public async Task ConfirmaManifestacaoCte(string cStat, string dhRegEvento, string nProt, string chCTe, int seqCliente, string xMotivo, string tpEvento)
+        public async Task ConfirmaManifestacaoCte(string cStat, string nProt, string chCTe, int seqCliente, string xMotivo, string tpEvento)
         {
             try
             {
@@ -260,7 +260,6 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     var parms = new OracleDynamicParameters();
 
                     parms.Add("pCODSTATUS", cStat);
-                    parms.Add("pDTREGEVENTO", Convert.ToDateTime(dhRegEvento).ToUniversalTime());
                     parms.Add("pNPROTOCOLO", nProt);
                     parms.Add("pCHCTE", chCTe);
                     parms.Add("pSEQCLIENTE", seqCliente);
