@@ -30,20 +30,17 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             IEnumerable<Produto> produtos = null;
             try
             {
-                string sql = "pkg_bs_consultas.CONSULTAR_PRODUTOS";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pSEQ_CLIENTE", filtro.SeqCliente);
+                    parametros.Add("pNOMEFORNEC", filtro.NomeFornecedor);
+                    parametros.Add("pNOMEPRODUTO", filtro.NomeProduto);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    parms.Add("pSEQ_CLIENTE", filtro.SeqCliente);
-                    parms.Add("pNOMEFORNEC", filtro.NomeFornecedor);
-                    parms.Add("pNOMEPRODUTO", filtro.NomeProduto);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    produtos = await conn.QueryAsync<Produto>(sql, parms, commandType: CommandType.StoredProcedure);
+                    produtos = await conexao.QueryAsync<Produto>("pkg_bs_consultas.CONSULTAR_PRODUTOS", parametros, 
+                        commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)

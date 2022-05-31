@@ -31,19 +31,18 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_bs_nf_entrada.PESQ_EMPRESAS";
+                using OracleConnection conexao = new OracleConnection(_connectionString);
 
-                using OracleConnection conn = new OracleConnection(_connectionString);
 
-                if (conn.State == ConnectionState.Closed) conn.Open();
+                OracleDynamicParameters parametros = new OracleDynamicParameters();
 
-                OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+                parametros.Add("pSEQ_CLIENTE", seqCliente);
 
-                dynamicParameters.Add("pSEQ_CLIENTE", seqCliente);
+                parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                return await conn.QueryAsync<EmpresasCliente>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                return await conexao.QueryAsync<EmpresasCliente>
+                    ("pkg_bs_nf_entrada.PESQ_EMPRESAS",
+                    parametros, commandType: CommandType.StoredProcedure);
             }
             catch (Exception e)
             {
@@ -57,24 +56,22 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = "pkg_bs_nf_entrada.PESQ_TOTALIZADORES";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
 
-                    if (conn.State == ConnectionState.Closed) if (conn.State == ConnectionState.Closed) conn.Open();
+                    OracleDynamicParameters parametros = new OracleDynamicParameters();
 
-                    OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+                    parametros.Add("pSEQ_CLIENTE", seqCliente);
 
-                    dynamicParameters.Add("pSEQ_CLIENTE", seqCliente);
+                    parametros.Add("pDATAINI", dataInicio);
 
-                    dynamicParameters.Add("pDATAINI", dataInicio);
+                    parametros.Add("pDATAFIM", dataFim);
 
-                    dynamicParameters.Add("pDATAFIM", dataFim);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    return await conn.QueryFirstOrDefaultAsync<Totalizadores>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                    return await conexao.QueryFirstOrDefaultAsync<Totalizadores>
+                        ("pkg_bs_nf_entrada.PESQ_TOTALIZADORES",
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
 
             }
@@ -89,21 +86,22 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_bs_nf_entrada.PESQ_NFENT_RECEBIDAS_DIA";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+                    OracleDynamicParameters parametros = new OracleDynamicParameters();
 
-                    dynamicParameters.Add("pSEQ_CLIENTE", Vseq_Cliente);
+                    parametros.Add("pSEQ_CLIENTE", Vseq_Cliente);
 
-                    dynamicParameters.Add("pDATAINI", dataIni);
+                    parametros.Add("pDATAINI", dataIni);
 
-                    dynamicParameters.Add("pDATAFIM", dataFim);
+                    parametros.Add("pDATAFIM", dataFim);
 
-                    dynamicParameters.Add(name: ":CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    parametros.Add(name: ":CUR_OUT", dbType: OracleMappingType.RefCursor,
+                        direction: ParameterDirection.Output);
 
-                    return await conn.QueryAsync<TotalizadorNotasPorDia>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                    return await conexao.QueryAsync<TotalizadorNotasPorDia>
+                        ("pkg_bs_nf_entrada.PESQ_NFENT_RECEBIDAS_DIA",
+                        param: parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception e)
@@ -138,48 +136,49 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     empresas = empresas.Substring(0, empresas.LastIndexOf(','));
                 }
 
-                using OracleConnection conn = new OracleConnection(_connectionString);
+                using OracleConnection conexao = new OracleConnection(_connectionString);
 
-                conn.Open();
+                conexao.Open();
 
-                OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+                OracleDynamicParameters parametros = new OracleDynamicParameters();
 
 
-                dynamicParameters.Add("pSEQ_CLIENTE", pesquisa.seqCliente);
-                dynamicParameters.Add("pDATAINI", pesquisa.DATAINI);
-                dynamicParameters.Add("pDATAFIM", pesquisa.DATAFIM);
-                dynamicParameters.Add("pCHAVENFE", pesquisa.CHAVENFE);
-                dynamicParameters.Add("pNATUREZAOPER", pesquisa.NATUREZAOPER);
-                dynamicParameters.Add("pNUMNOTA", pesquisa.NUMNOTA);
-                dynamicParameters.Add("pCNPJEMITENTE", pesquisa.CNPJEMITENTE);
-                dynamicParameters.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);
-                dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJDEST);
-                dynamicParameters.Add("pNOMEDEST", pesquisa.NOMEDEST);
-                dynamicParameters.Add("pDTENTINI", dataEntradaIni);
-                dynamicParameters.Add("pDTENTFIM", dataEntradaFim);
-                dynamicParameters.Add("pUF", pesquisa.UF);
-                dynamicParameters.Add("pCFOP", pesquisa.CFOP);
-                dynamicParameters.Add("pEXIBIRNFELIVROFISCAL", pesquisa.EXIBIRNFELIVROFISCAL == true ? 1 : 0);
-                dynamicParameters.Add("pCARTACORRECAO", pesquisa.CARTACORRECAO == true ? 1 : 0);
-                dynamicParameters.Add("pNFSEMENTRADAERP", pesquisa.NFSEMENTRADAERP == true ? 1 : 0);
-                dynamicParameters.Add("pNOTASENTPREENT", pesquisa.NOTASENTPREENT == true ? 1 : 0);
-                dynamicParameters.Add("pNOTASENTERP", pesquisa.NOTASENTERP == true ? 1 : 0);
-                dynamicParameters.Add("pDEVOLUCAO", pesquisa.DEVOLUCAO == true ? 1 : 0);
-                dynamicParameters.Add("pTRANSF", pesquisa.TRANSF == true ? 1 : 0);
-                dynamicParameters.Add("pEXCETOTRANSF", pesquisa.EXIBIRNFELIVROFISCAL == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSNFEAUTORI", pesquisa.STATUSNFEAUTORI == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSNFECANC", pesquisa.STATUSNFECANC == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSNFEDENEGADO", pesquisa.STATUSNFEDENEGADO == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSMANIFNENHUMA", pesquisa.STATUSMANIFNENHUMA == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSMANIFCIENCIA", pesquisa.STATUSMANIFCIENCIA == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSMANIFCONFIRMADA", pesquisa.STATUSMANIFCONFIRMADA == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSMANIFDESCONHECIDA", pesquisa.STATUSMANIFDESCONHECIDA == true ? 1 : 0);
-                dynamicParameters.Add("pSTATUSMANIFNAOREALIZADA", pesquisa.STATUSMANIFNAOREALIZADA == true ? 1 : 0);
-                dynamicParameters.Add("pNFUSOECONSUMO", pesquisa.NFUSOECONSUMO == true ? 1 : 0);
-                dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);
-                dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                parametros.Add("pSEQ_CLIENTE", pesquisa.seqCliente);
+                parametros.Add("pDATAINI", pesquisa.DATAINI);
+                parametros.Add("pDATAFIM", pesquisa.DATAFIM);
+                parametros.Add("pCHAVENFE", pesquisa.CHAVENFE);
+                parametros.Add("pNATUREZAOPER", pesquisa.NATUREZAOPER);
+                parametros.Add("pNUMNOTA", pesquisa.NUMNOTA);
+                parametros.Add("pCNPJEMITENTE", pesquisa.CNPJEMITENTE);
+                parametros.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);
+                parametros.Add("pCNPJDEST", pesquisa.CNPJDEST);
+                parametros.Add("pNOMEDEST", pesquisa.NOMEDEST);
+                parametros.Add("pDTENTINI", dataEntradaIni);
+                parametros.Add("pDTENTFIM", dataEntradaFim);
+                parametros.Add("pUF", pesquisa.UF);
+                parametros.Add("pCFOP", pesquisa.CFOP);
+                parametros.Add("pEXIBIRNFELIVROFISCAL", pesquisa.EXIBIRNFELIVROFISCAL == true ? 1 : 0);
+                parametros.Add("pCARTACORRECAO", pesquisa.CARTACORRECAO == true ? 1 : 0);
+                parametros.Add("pNFSEMENTRADAERP", pesquisa.NFSEMENTRADAERP == true ? 1 : 0);
+                parametros.Add("pNOTASENTPREENT", pesquisa.NOTASENTPREENT == true ? 1 : 0);
+                parametros.Add("pNOTASENTERP", pesquisa.NOTASENTERP == true ? 1 : 0);
+                parametros.Add("pDEVOLUCAO", pesquisa.DEVOLUCAO == true ? 1 : 0);
+                parametros.Add("pTRANSF", pesquisa.TRANSF == true ? 1 : 0);
+                parametros.Add("pEXCETOTRANSF", pesquisa.EXIBIRNFELIVROFISCAL == true ? 1 : 0);
+                parametros.Add("pSTATUSNFEAUTORI", pesquisa.STATUSNFEAUTORI == true ? 1 : 0);
+                parametros.Add("pSTATUSNFECANC", pesquisa.STATUSNFECANC == true ? 1 : 0);
+                parametros.Add("pSTATUSNFEDENEGADO", pesquisa.STATUSNFEDENEGADO == true ? 1 : 0);
+                parametros.Add("pSTATUSMANIFNENHUMA", pesquisa.STATUSMANIFNENHUMA == true ? 1 : 0);
+                parametros.Add("pSTATUSMANIFCIENCIA", pesquisa.STATUSMANIFCIENCIA == true ? 1 : 0);
+                parametros.Add("pSTATUSMANIFCONFIRMADA", pesquisa.STATUSMANIFCONFIRMADA == true ? 1 : 0);
+                parametros.Add("pSTATUSMANIFDESCONHECIDA", pesquisa.STATUSMANIFDESCONHECIDA == true ? 1 : 0);
+                parametros.Add("pSTATUSMANIFNAOREALIZADA", pesquisa.STATUSMANIFNAOREALIZADA == true ? 1 : 0);
+                parametros.Add("pNFUSOECONSUMO", pesquisa.NFUSOECONSUMO == true ? 1 : 0);
+                parametros.Add("pEMPRESASCADASTRADAS", empresas);
+                parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                return await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                return await conexao.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT",
+                    parametros, commandType: CommandType.StoredProcedure);
             }
             catch (Exception e)
             {
@@ -191,19 +190,16 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_bs_nf_entrada.PESQ_CFOP";
-
-                using (OracleConnection conn = new OracleConnection(_connectionString))
+                using (OracleConnection conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) if (conn.State == ConnectionState.Closed) conn.Open();
+                    OracleDynamicParameters parametros = new OracleDynamicParameters();
 
-                    OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+                    parametros.Add("pSEQ_CLIENTE", seqCliente);
 
-                    dynamicParameters.Add("pSEQ_CLIENTE", seqCliente);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    return await conn.QueryAsync<CFOP>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                    return await conexao.QueryAsync<CFOP>("pkg_bs_nf_entrada.PESQ_CFOP",
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
 
             }
@@ -218,19 +214,15 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_bs_nf_entrada.PESQ_FORNECEDORES";
+                using OracleConnection conexao = new OracleConnection(_connectionString);
 
-                using OracleConnection conn = new OracleConnection(_connectionString);
+                OracleDynamicParameters parametros = new OracleDynamicParameters();
 
-                if (conn.State == ConnectionState.Closed) conn.Open();
+                parametros.Add("pSEQ_CLIENTE", seqCliente);
 
-                OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+                parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                dynamicParameters.Add("pSEQ_CLIENTE", seqCliente);
-
-                dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                return await conn.QueryAsync<Fornecedores>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                return await conexao.QueryAsync<Fornecedores>("pkg_bs_nf_entrada.PESQ_FORNECEDORES", parametros, commandType: CommandType.StoredProcedure);
             }
             catch (Exception e)
             {
@@ -243,21 +235,19 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_bs_nf_entrada.PESQ_DETALHES_NFENT";
-
-                using (OracleConnection conn = new OracleConnection(_connectionString))
+                using (OracleConnection conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    OracleDynamicParameters parametros = new OracleDynamicParameters();
 
-                    OracleDynamicParameters dynamicParameters = new OracleDynamicParameters();
+                    parametros.Add("pSEQ_CLIENTE", seqCliente);
 
-                    dynamicParameters.Add("pSEQ_CLIENTE", seqCliente);
+                    parametros.Add("pCHAVENFE", chaveNfe);
 
-                    dynamicParameters.Add("pCHAVENFE", chaveNfe);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    return await conn.QueryAsync<DetalheNotaFiscalEntrada>(sql, param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                    return await conexao.QueryAsync<DetalheNotaFiscalEntrada>
+                        ("pkg_bs_nf_entrada.PESQ_DETALHES_NFENT", 
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception e)
@@ -269,15 +259,13 @@ namespace Brunsker.Bsnotas.OracleAdapter
         }
         public async Task<string> SelectArquivoXml(string chave)
         {
-            string sql = $@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_NFE_ENTRADA t WHERE T.CHAVENFE = '{chave}'";
-
             try
             {
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    var result = await conn.QueryFirstOrDefaultAsync<string>(sql);
+                    var result = await conexao.QueryFirstOrDefaultAsync<string>
+                    ($@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_NFE_ENTRADA t WHERE T.CHAVENFE = '{chave}'");
 
                     return result;
                 }
@@ -291,15 +279,13 @@ namespace Brunsker.Bsnotas.OracleAdapter
         }
         public async Task<string> SelectArquivoXmlCCe(string chave)
         {
-            string sql = $@"SELECT CCE.ARQUIVO_XML XML_CONTEUDO FROM BSNT_CCE_NFE CCE WHERE CCE.CHAVE = '{chave}'";
-
             try
             {
-                using (var conn = new OracleConnection(_configuration.GetConnectionString("OracleConnectionOld")))
+                using (var conexao = new OracleConnection(_configuration.GetConnectionString("OracleConnectionOld")))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    var result = await conn.QueryFirstOrDefaultAsync<string>(sql);
+                    var result = await conexao.QueryFirstOrDefaultAsync<string>
+                        ($@"SELECT CCE.ARQUIVO_XML XML_CONTEUDO FROM BSNT_CCE_NFE CCE WHERE CCE.CHAVE = '{chave}'");
 
                     return result;
                 }
@@ -313,22 +299,19 @@ namespace Brunsker.Bsnotas.OracleAdapter
         }
         public async Task<IEnumerable<TotalizadorNotasPorDia>> BuscarTotalizadoresGraficoAsync(FiltroTotalizadores filtro)
         {
-            string sql = "pkg_bs_nf_entrada.PESQ_NFENT_RECEBIDAS_DIA";
-
             try
             {
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parameters = new OracleDynamicParameters();
+                    parametros.Add("pSEQ_CLIENTE", filtro.SeqCliente);
+                    parametros.Add("pDATAINI", filtro.DataInicial);
+                    parametros.Add("pDATAFIM", filtro.DataFinal);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    parameters.Add("pSEQ_CLIENTE", filtro.SeqCliente);
-                    parameters.Add("pDATAINI", filtro.DataInicial);
-                    parameters.Add("pDATAFIM", filtro.DataFinal);
-                    parameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    var result = await conn.QueryAsync<TotalizadorNotasPorDia>(sql, parameters, commandType: CommandType.StoredProcedure);
+                    var result = await conexao.QueryAsync<TotalizadorNotasPorDia>
+                        ("pkg_bs_nf_entrada.PESQ_NFENT_RECEBIDAS_DIA", parametros, commandType: CommandType.StoredProcedure);
 
                     return result;
                 }
@@ -346,22 +329,20 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = "pkg_webserv_insert_bsnotas.SELECT_RELACAO_WEB_SERVICES";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    parametros.Add("pSEQ_CLIENTE", seq_cliente);
+                    parametros.Add("pCNPJ", cnpj);
 
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-                    parms.Add("pSEQ_CLIENTE", seq_cliente);
-                    parms.Add("pCNPJ", cnpj);
-
-                    recepcao = await conn.QueryFirstOrDefaultAsync<RecepcaoEvento>(sql, parms, commandType: CommandType.StoredProcedure);
+                    recepcao = await conexao.QueryFirstOrDefaultAsync<RecepcaoEvento>
+                        ("pkg_webserv_insert_bsnotas.SELECT_RELACAO_WEB_SERVICES", 
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) 
             {
                 _logger.LogError(ex.Message);
             }
@@ -371,18 +352,15 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_webserv_insert_bsnotas.PROC_CONFIRMA_MANIFESTACAO";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pCODIGO_EVENTO", int.Parse(codigoEvento));
+                    parametros.Add("pCHAVE", chave);
 
-                    parms.Add("pCODIGO_EVENTO", int.Parse(codigoEvento));
-                    parms.Add("pCHAVE", chave);
-
-                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
+                    await conexao.ExecuteAsync("pkg_webserv_insert_bsnotas.PROC_CONFIRMA_MANIFESTACAO",
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -396,21 +374,21 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = "pkg_pre_entrada.VALIDAR_PREENTRADA";
 
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    var parms = new OracleDynamicParameters();
+                    var parametros = new OracleDynamicParameters();
 
-                    parms.Add("pSEQ_CLIENTE", validar.SEQ_CLIENTE);
-                    parms.Add("pCHAVE", validar.CHAVE);
-                    parms.Add("pCODFILIAL", validar.CODFILIAL);
-                    parms.Add("pNUMPED", validar.NUMPED);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    parametros.Add("pSEQ_CLIENTE", validar.SEQ_CLIENTE);
+                    parametros.Add("pCHAVE", validar.CHAVE);
+                    parametros.Add("pCODFILIAL", validar.CODFILIAL);
+                    parametros.Add("pNUMPED", validar.NUMPED);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    result = await conn.QueryAsync<ResultadoValidacaoPreEntrada>(sql, parms, commandType: CommandType.StoredProcedure);
+                    result = await conexao.QueryAsync<ResultadoValidacaoPreEntrada>
+                        ("pkg_pre_entrada.VALIDAR_PREENTRADA", 
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -423,25 +401,23 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_pre_entrada.PROC_INS_PCMOVPREENT";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    var parms = new OracleDynamicParameters();
+                    var parametros = new OracleDynamicParameters();
 
-                    parms.Add("pSEQ_CLIENTE", item.SEQ_CLIENTE);
-                    parms.Add("pPREENTSEMVINCPED", item.PREENTSEMVINCULOPED);
-                    parms.Add("pCHAVENFE", item.CHAVE);
-                    parms.Add("pCODPROD", item.CODPROD == 0 ? null : item.CODPROD);
-                    parms.Add("pNUMSEQ", item.NUMSEQ == 0 ? null : item.NUMSEQ);
-                    parms.Add("pQTDE", item.QTPENTREGUE == 0 ? null : item.QTPENTREGUE);
-                    parms.Add("pNUMPEDPREENT", item.NUMPED == 0 ? null : item.NUMPED);
-                    parms.Add("pMSG", item.Mensagem);
-                    parms.Add("pCODFORNEC", item.codFornec == 0 ? null : item.codFornec);
+                    parametros.Add("pSEQ_CLIENTE", item.SEQ_CLIENTE);
+                    parametros.Add("pPREENTSEMVINCPED", item.PREENTSEMVINCULOPED);
+                    parametros.Add("pCHAVENFE", item.CHAVE);
+                    parametros.Add("pCODPROD", item.CODPROD == 0 ? null : item.CODPROD);
+                    parametros.Add("pNUMSEQ", item.NUMSEQ == 0 ? null : item.NUMSEQ);
+                    parametros.Add("pQTDE", item.QTPENTREGUE == 0 ? null : item.QTPENTREGUE);
+                    parametros.Add("pNUMPEDPREENT", item.NUMPED == 0 ? null : item.NUMPED);
+                    parametros.Add("pMSG", item.Mensagem);
+                    parametros.Add("pCODFORNEC", item.codFornec == 0 ? null : item.codFornec);
 
-                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
+                    await conexao.ExecuteAsync("pkg_pre_entrada.PROC_INS_PCMOVPREENT",
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -454,19 +430,17 @@ namespace Brunsker.Bsnotas.OracleAdapter
             IEnumerable<PedidoAssociado> pedidos = null;
             try
             {
-                string sql = "pkg_pre_entrada.PROC_ASSOCIA_PEDIDO";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pSEQ_CLIENTE", seqCliente);
+                    parametros.Add("pCHAVE", chave);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    parms.Add("pSEQ_CLIENTE", seqCliente);
-                    parms.Add("pCHAVE", chave);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    pedidos = await conn.QueryAsync<PedidoAssociado>(sql, parms, commandType: CommandType.StoredProcedure);
+                    pedidos = await conexao.QueryAsync<PedidoAssociado>
+                        ("pkg_pre_entrada.PROC_ASSOCIA_PEDIDO", 
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -481,21 +455,18 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = "pkg_pre_entrada.PROC_EXIBIR_ITENSPED";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pCHAVE", pesq.CHAVE);
+                    parametros.Add("pSEQ_CLIENTE", pesq.SEQ_CLIENTE);
+                    parametros.Add("pNUMPED", pesq.NUMPED);
+                    parametros.Add("pCNPJEMITENTE", pesq.CNPJ);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    parms.Add("pCHAVE", pesq.CHAVE);
-                    parms.Add("pSEQ_CLIENTE", pesq.SEQ_CLIENTE);
-                    parms.Add("pNUMPED", pesq.NUMPED);
-                    parms.Add("pCNPJEMITENTE", pesq.CNPJ);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    itens = await conn.QueryAsync<ItemPedido>(sql, parms, commandType: CommandType.StoredProcedure);
+                    itens = await conexao.QueryAsync<ItemPedido>("pkg_pre_entrada.PROC_EXIBIR_ITENSPED",
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -509,22 +480,20 @@ namespace Brunsker.Bsnotas.OracleAdapter
             IEnumerable<object> livro = null;
             try
             {
-                string sql = "pkg_pre_entrada.pesq_gerarnflivrofiscal";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pchave", parametro.Chave);
+                    parametros.Add("pcodfornec", parametro.CodigoFornecedor);
+                    parametros.Add("pnumnota", parametro.NumeroNota);
+                    parametros.Add("pdtemissao", parametro.DataEmissao);
+                    parametros.Add("pseq_cliente", parametro.SeqCliente);
+                    parametros.Add("cur_out", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    parms.Add("pchave", parametro.Chave);
-                    parms.Add("pcodfornec", parametro.CodigoFornecedor);
-                    parms.Add("pnumnota", parametro.NumeroNota);
-                    parms.Add("pdtemissao", parametro.DataEmissao);
-                    parms.Add("pseq_cliente", parametro.SeqCliente);
-                    parms.Add("cur_out", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    await conn.QueryAsync<object>(sql, parms, commandType: CommandType.StoredProcedure);
+                    await conexao.QueryAsync<object>
+                        ("pkg_pre_entrada.pesq_gerarnflivrofiscal", 
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -539,13 +508,11 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = $"SELECT * FROM BSNT_PCCONTAS_WINTHOR C WHERE C.SEQ_CLIENTE = {seqCliente}";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    contas = await conn.QueryAsync<Contas>(sql);
+                    contas = await conexao.QueryAsync<Contas>
+                        ($"SELECT * FROM BSNT_PCCONTAS_WINTHOR C WHERE C.SEQ_CLIENTE = {seqCliente}");
                 }
             }
             catch (Exception ex)
@@ -558,17 +525,14 @@ namespace Brunsker.Bsnotas.OracleAdapter
         {
             try
             {
-                string sql = "pkg_pre_entrada.PROC_DELETE_PREENTRADA";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pCHAVE", chave);
 
-                    parms.Add("pCHAVE", chave);
-
-                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
+                    await conexao.ExecuteAsync("pkg_pre_entrada.PROC_DELETE_PREENTRADA",
+                        parametros, commandType: CommandType.StoredProcedure);
 
                     return true;
                 }
@@ -587,19 +551,19 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = "pkg_pre_entrada.PROC_EXIBIR_FORNEC";
 
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    var parms = new OracleDynamicParameters();
+                    var parametros = new OracleDynamicParameters();
 
-                    parms.Add("pSEQ_CLIENTE", seqCliente);
-                    parms.Add("pCNPJEMITENTE", cnpj);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    parametros.Add("pSEQ_CLIENTE", seqCliente);
+                    parametros.Add("pCNPJEMITENTE", cnpj);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    fornecedores = await conn.QueryAsync<FornecedoresAssociados>(sql, parms, commandType: CommandType.StoredProcedure);
+                    fornecedores = await conexao.QueryAsync<FornecedoresAssociados>
+                        ("pkg_pre_entrada.PROC_EXIBIR_FORNEC", parametros, 
+                        commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)

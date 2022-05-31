@@ -27,23 +27,20 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
         public async Task<IEnumerable<Cliente>> SelectClientes(FiltroPesquisaClientes filtro)
         {
             IEnumerable<Cliente> clientes = null;
-            try
+             try
             {
-                string sql = "pkg_bs_consultas.CONSULTAR_CLIENTES";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
 
-                    var parms = new OracleDynamicParameters();
+                    var parametros= new OracleDynamicParameters();
 
-                    parms.Add("pSEQ_CLIENTE", filtro.SeqCliente);
-                    parms.Add("pNOMECLIENTE", filtro.Nome);
-                    parms.Add("pCNPJ", filtro.Cnpj);
-                    parms.Add("pSTATUSBLOQ", filtro.Bloqueio == "S" ? 1 : 2);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    parametros.Add("pSEQ_CLIENTE", filtro.SeqCliente);
+                    parametros.Add("pNOMECLIENTE", filtro.Nome);
+                    parametros.Add("pCNPJ", filtro.Cnpj);
+                    parametros.Add("pSTATUSBLOQ", filtro.Bloqueio == "S" ? 1 : 2);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    clientes = await conn.QueryAsync<Cliente>(sql, parms, commandType: CommandType.StoredProcedure);
+                    clientes = await conexao.QueryAsync<Cliente>("pkg_bs_consultas.CONSULTAR_CLIENTES", parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)

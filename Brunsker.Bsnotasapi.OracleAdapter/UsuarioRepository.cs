@@ -29,21 +29,18 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
         {
             try
             {
-                string sql = "pkg_clientes_nfe.INSERT_USUARIO";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pNOME", usuario.NOME);
+                    parametros.Add("pLOGIN", usuario.LOGIN);
+                    parametros.Add("pSENHA", usuario.SENHA);
+                    parametros.Add("pSEQ_CLIENTE", usuario.SEQ_CLIENTE);
+                    parametros.Add("pAVATAR", usuario.AVATAR);
 
-                    parms.Add("pNOME", usuario.NOME);
-                    parms.Add("pLOGIN", usuario.LOGIN);
-                    parms.Add("pSENHA", usuario.SENHA);
-                    parms.Add("pSEQ_CLIENTE", usuario.SEQ_CLIENTE);
-                    parms.Add("pAVATAR", usuario.AVATAR);
-
-                    await conn.ExecuteAsync(sql, parms, commandType: CommandType.StoredProcedure);
+                    await conexao.ExecuteAsync("pkg_clientes_nfe.INSERT_USUARIO",
+                        parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -56,13 +53,10 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             Usuario usuario = null;
             try
             {
-                string sql = $"SELECT * FROM BSNT_USERS U WHERE U.LOGIN = '{email}'";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-
-                    usuario = await conn.QueryFirstOrDefaultAsync<Usuario>(sql);
+                    usuario = await conexao.QueryFirstOrDefaultAsync<Usuario>
+                        ($"SELECT * FROM BSNT_USERS U WHERE U.LOGIN = '{email}'");
                 }
             }
             catch (Exception ex)
@@ -77,19 +71,17 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
 
             try
             {
-                string sql = "pkg_clientes_nfe.LOGIN_USUARIO";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    var parametros = new OracleDynamicParameters();
 
-                    var parms = new OracleDynamicParameters();
+                    parametros.Add("pLOGIN", login);
+                    parametros.Add("pSENHA", senha);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    parms.Add("pLOGIN", login);
-                    parms.Add("pSENHA", senha);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-
-                    usuario = await conn.QuerySingleOrDefaultAsync<Usuario>(sql, parms, commandType: CommandType.StoredProcedure);
+                    usuario = await conexao.QuerySingleOrDefaultAsync<Usuario>
+                        ("pkg_clientes_nfe.LOGIN_USUARIO", parametros, 
+                        commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -102,11 +94,10 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
         {
             try
             {
-                string sql = $"SELECT * FROM BSNT_PARAMETROS P WHERE P.SEQ_CLIENTE = {id}";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    var parametros = await conn.QueryFirstOrDefaultAsync<ParametrosCliente>(sql);
+                    var parametros = await conexao.QueryFirstOrDefaultAsync<ParametrosCliente>
+                        ($"SELECT * FROM BSNT_PARAMETROS P WHERE P.SEQ_CLIENTE = {id}");
 
                     return parametros;
                 }
@@ -124,11 +115,9 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
 
             try
             {
-                string sql = $"SELECT * FROM BSNT_USERS T WHERE T.SEQ_CLIENTE =  {seqCliente}";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    usuarios = await conn.QueryAsync<Usuario>(sql);
+                    usuarios = await conexao.QueryAsync<Usuario>($"SELECT * FROM BSNT_USERS T WHERE T.SEQ_CLIENTE =  {seqCliente}");
                 }
             }
             catch (Exception ex)
@@ -143,15 +132,14 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
 
             try
             {
-                string sql = $@"SELECT DISTINCT (C.VALIDADE_CERTIFICADO) AS VALIDADE,
-                                                C.CERTIFICADO_DIGITAL AS NOMECERTIFICADO,
-                                                C.SEQ_CLIENTE SEQCLIENTE
-                                FROM BSNT_CERTIFICADO_DIGITAL C
-                                WHERE C.SEQ_CLIENTE = {seqCliente}";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    certificados = await conn.QueryAsync<Certificado>(sql);
+                    certificados = await conexao.QueryAsync<Certificado>(
+                        $@"SELECT DISTINCT (C.VALIDADE_CERTIFICADO) AS VALIDADE,
+                        C.CERTIFICADO_DIGITAL AS NOMECERTIFICADO,
+                        C.SEQ_CLIENTE SEQCLIENTE
+                        FROM BSNT_CERTIFICADO_DIGITAL C
+                        WHERE C.SEQ_CLIENTE = {seqCliente}");
                 }
             }
             catch (Exception ex)
@@ -165,11 +153,9 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
         {
             try
             {
-                string sql = $"DELETE FROM BSNT_USERS U WHERE U.SEQ_USUARIOS = {seqUsuario}";
-
-                using (var conn = new OracleConnection(_connectionString))
+                using (var conexao = new OracleConnection(_connectionString))
                 {
-                    await conn.ExecuteAsync(sql);
+                    await conexao.ExecuteAsync($"DELETE FROM BSNT_USERS U WHERE U.SEQ_USUARIOS = {seqUsuario}");
                 }
             }
             catch (Exception ex)
