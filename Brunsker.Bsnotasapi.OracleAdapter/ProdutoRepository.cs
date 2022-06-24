@@ -37,6 +37,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     parametros.Add("pSEQ_CLIENTE", filtro.SeqCliente);
                     parametros.Add("pNOMEFORNEC", filtro.NomeFornecedor);
                     parametros.Add("pNOMEPRODUTO", filtro.NomeProduto);
+                    parametros.Add("pCODPRODUTO", filtro.CodigoProduto);
                     parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                     produtos = await conexao.QueryAsync<Produto>("pkg_bs_consultas.CONSULTAR_PRODUTOS", parametros, 
