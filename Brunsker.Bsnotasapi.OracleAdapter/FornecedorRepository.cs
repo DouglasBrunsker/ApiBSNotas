@@ -35,6 +35,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     var parametros = new OracleDynamicParameters();
 
                     parametros.Add("pSEQ_CLIENTE", filtro.SeqCliente);
+                    parametros.Add("pCODFORNEC", filtro.CodigoDoFornecedor);
                     parametros.Add("pNOMEFORNEC", filtro.NomeFornecedor);
                     parametros.Add("pCNPJ", filtro.Cnpj);
                     parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor,

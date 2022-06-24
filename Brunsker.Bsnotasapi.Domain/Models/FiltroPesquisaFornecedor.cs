@@ -3,6 +3,7 @@ namespace Brunsker.Bsnotasapi.Domain.Models
     public class FiltroPesquisaFornecedor
     {
         public long SeqCliente { get; set; }
+        public int CodigoDoFornecedor { get; set; }
         public string NomeFornecedor { get; set; }
         public string Cnpj { get; set; }
         public int Index { get; set; }

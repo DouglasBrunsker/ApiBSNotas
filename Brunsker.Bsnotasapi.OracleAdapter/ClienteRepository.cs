@@ -35,6 +35,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     var parametros= new OracleDynamicParameters();
 
                     parametros.Add("pSEQ_CLIENTE", filtro.SeqCliente);
+                    parametros.Add("pCODCLIENTE", filtro.CodigoCliente);
                     parametros.Add("pNOMECLIENTE", filtro.Nome);
                     parametros.Add("pCNPJ", filtro.Cnpj);
                     parametros.Add("pSTATUSBLOQ", filtro.Bloqueio == "S" ? 1 : 2);
