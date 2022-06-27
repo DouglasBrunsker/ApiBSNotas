@@ -34,5 +34,18 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("ExibirICMS")]
+        public async Task<IActionResult> ExibirICMS(string chave, int codigoProduto)
+        {
+            var ICMS = await _rep.ExbirICMS(chave, codigoProduto);
+
+            if (ICMS != null)
+            {
+                return Ok(ICMS);
+            }
+
+            return NoContent();
+        }
     }
 }

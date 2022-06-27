@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Brunsker.Bsnotas.Domain.Models;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Dapper;
@@ -49,6 +50,34 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 _logger.LogError("Error: " + ex.Message);
             }
             return produtos;
+        }
+
+        public async Task<IEnumerable<ICMS>> ExbirICMS(string chave, int codigo_produto)
+        {
+            IEnumerable<ICMS> ICMSdosProdutos = null;
+
+            try
+            {
+                using (var conexao = new OracleConnection(_connectionString))
+                {
+
+                    var parametros = new OracleDynamicParameters();
+
+                    parametros.Add("pCHAVE", chave);
+                    parametros.Add("pCODPROD", codigo_produto);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+
+                    ICMSdosProdutos = await conexao.QueryAsync<ICMS>("pkg_pre_entrada.PROC_EXIBIR_ICMS", parametros,
+                        commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
+
+            return ICMSdosProdutos;
         }
     }
 }
