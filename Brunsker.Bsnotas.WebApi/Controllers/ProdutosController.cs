@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Brunsker.Bsnotas.WebApi.Helpers;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
@@ -33,6 +35,26 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             }
 
             return NoContent();
+        }
+
+        /*[HttpPost("BuscarProdutos")]
+        public async Task<IActionResult> BuscarProdutos(FiltroPesquisaProdutos filtro)
+        {
+            var produtos = await _rep.SelectProdutos(filtro);
+
+            if (produtos != null)
+            {
+                return Ok(new Pagination<Produto>(filtro.Index, filtro.Length, produtos));
+            }
+
+            return NoContent();
+        }*/
+
+        [HttpPost("ExibirICMS{chave}/{codigo_produto}")]
+        public async Task<ICMS> ExibirICMS(string chave, int codigo_produto)
+        {
+            var ICMS = await _rep.ExibirICMS(chave, codigo_produto);
+            return ICMS;
         }
     }
 }

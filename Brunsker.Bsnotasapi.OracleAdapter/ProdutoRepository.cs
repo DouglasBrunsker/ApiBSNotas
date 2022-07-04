@@ -52,5 +52,32 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             }
             return produtos;
         }
+
+        public async Task<ICMS> ExibirICMS(string chave, int codigo_produto)
+        {
+             ICMS ICMS = null;
+
+            try
+            {
+                using (var coneccao = new OracleConnection(_connectionString))
+                {
+                    var parametros = new OracleDynamicParameters();
+
+                    parametros.Add("pCHAVE", chave);
+                    parametros.Add("pCODPROD", codigo_produto);
+                    parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                    ICMS = await coneccao.QueryFirstOrDefaultAsync<ICMS>("PKG_PRE_ENTRADA.PROC_EXIBIR_ICMS", parametros, commandType: CommandType.StoredProcedure);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
+
+            return ICMS;
+        }
     }
+
+
 }
