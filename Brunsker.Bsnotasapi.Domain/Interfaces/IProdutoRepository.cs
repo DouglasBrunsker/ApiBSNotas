@@ -7,6 +7,6 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
     public interface IProdutoRepository
     {
         Task<IEnumerable<Produto>> SelectProdutos(FiltroPesquisaProdutos filtro);
-        Task<ICMS> ExibirICMS(string chave, int codigo_produto);
+        Task<ICMS> ExibirICMS(string chave, int pSEQ_CLIENTE);
     }
 }

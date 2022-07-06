@@ -53,9 +53,9 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             return produtos;
         }
 
-        public async Task<ICMS> ExibirICMS(string chave, int codigo_produto)
+        public async Task<ICMS> ExibirICMS(string chave, int pSEQ_CLIENTE)
         {
-             ICMS ICMS = null;
+            ICMS ICMS = null;
 
             try
             {
@@ -64,10 +64,10 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     var parametros = new OracleDynamicParameters();
 
                     parametros.Add("pCHAVE", chave);
-                    parametros.Add("pCODPROD", codigo_produto);
+                    parametros.Add("pSEQ_CLIENTE", pSEQ_CLIENTE);
                     parametros.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    ICMS = await coneccao.QueryFirstOrDefaultAsync<ICMS>("PKG_PRE_ENTRADA.PROC_EXIBIR_ICMS", parametros, commandType: CommandType.StoredProcedure);
+                    ICMS = await coneccao.QueryFirstOrDefaultAsync<ICMS>("PKG_PRE_ENTRADA.VALIDAR_PREENTRADA_FINAN", parametros, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
