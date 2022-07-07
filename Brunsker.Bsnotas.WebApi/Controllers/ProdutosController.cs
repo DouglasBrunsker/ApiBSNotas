@@ -12,7 +12,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class ProdutosController : ControllerBase
     {
         private readonly IProdutoRepository _rep;
@@ -50,11 +50,12 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             return NoContent();
         }*/
 
-        [HttpPost("ExibirICMS{chave}/{pSEQ_CLIENTE}")]
-        public async Task<ICMS> ExibirICMS(string chave, int pSEQ_CLIENTE)
-        {
-            var ICMS = await _rep.ExibirICMS(chave, pSEQ_CLIENTE);
-            return ICMS;
-        }
+        //[HttpPost("ExibirICMS{chave}/{CODPROD}")]
+        //public async Task<ICMS> ExibirICMS(string chave, int CODPROD)
+        //{
+        //    var ICMS = await _rep.ExibirICMS(chave, CODPROD);
+
+        //    return ICMS;
+        //}
     }
 }
