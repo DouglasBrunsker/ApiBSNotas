@@ -27,9 +27,9 @@ namespace Brunsker.Bsnotas.OracleAdapter
             _connectionString = _configuration.GetConnectionString("OracleConnection");
         }
 
-        public async Task<CadastroCFOP> CadastrarCFOP(int seqCliente, string stringBanco, int cfopEnd, int cfoSaida, string descricao)
+        public async Task CadastrarCFOP(int seqCliente, string stringBanco, int cfopEnd, int cfoSaida, string descricao)
         {
-            CadastroCFOP cadastroCFOP = null;
+             CadastroCFOP cadastroCFOP = null;
 
             try
             {
@@ -50,9 +50,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
             catch (Exception ex)
             {
                 _logger.LogError("Error: " + ex.Message);
-            }
-
-            return cadastroCFOP;
+            }        
         }
     }
 }

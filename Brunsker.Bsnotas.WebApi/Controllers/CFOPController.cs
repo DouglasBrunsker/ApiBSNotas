@@ -18,11 +18,10 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         }
 
         [HttpPost("CadastrarCFOP{seqCliente}/{stringBanco}/{cfopEnd}/{cfoSaida}")]
-        public async Task<CadastroCFOP> CadastrarCFOP(int seqCliente, string stringBanco, int cfopEnd, int cfoSaida, string descricao)
+        public async Task CadastrarCFOP(int seqCliente, string stringBanco, int cfopEnd, int cfoSaida, string descricao)
         {
-            var cadastrarCfop = await _cfop.CadastrarCFOP(seqCliente, stringBanco, cfopEnd, cfoSaida, descricao);
+            await _cfop.CadastrarCFOP(seqCliente, stringBanco, cfopEnd, cfoSaida, descricao);
 
-            return cadastrarCfop;
         }
     }
 }
