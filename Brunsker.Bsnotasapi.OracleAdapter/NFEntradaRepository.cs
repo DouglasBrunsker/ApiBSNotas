@@ -177,6 +177,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 dynamicParameters.Add("pSTATUSMANIFNAOREALIZADA", pesquisa.STATUSMANIFNAOREALIZADA == true ? 1 : 0);
                 dynamicParameters.Add("pNFUSOECONSUMO", pesquisa.NFUSOECONSUMO == true ? 1 : 0);
                 dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);
+
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                 return await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);

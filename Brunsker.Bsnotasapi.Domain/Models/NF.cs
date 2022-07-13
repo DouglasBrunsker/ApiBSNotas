@@ -4,6 +4,7 @@ namespace Brunsker.Bsnotasapi.Domain.Models
 {
     public class NF
     {
+        public string APELIDO { get; set; }
         public long NUMNOTA { get; set; }
         public long CODCLI { get; set; }
         public string CLIENTE { get; set; }
