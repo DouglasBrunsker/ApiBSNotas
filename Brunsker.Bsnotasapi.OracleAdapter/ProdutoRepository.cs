@@ -41,7 +41,9 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                     parms.Add("pSEQ_CLIENTE", filtro.SeqCliente);
                     parms.Add("pNOMEFORNEC", filtro.NomeFornecedor);
                     parms.Add("pNOMEPRODUTO", filtro.NomeProduto);
+                    parms.Add("pCODPRODUTO", filtro.CodeProduto);
                     parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
 
                     produtos = await conn.QueryAsync<Produto>(sql, parms, commandType: CommandType.StoredProcedure);
                 }

@@ -2,10 +2,10 @@ namespace Brunsker.Bsnotasapi.Domain.Models
 {
     public class Produto
     {
-        public long CodProd { get; set; }
-        public string Descricao { get; set; }
-        public long? CodAuxiliar { get; set; }
-        public string CodNcmEx { get; set; }
-        public long? CodFiscal { get; set; }
+        public long? CODPROD { get; set; } 
+        public string DESCRICAO { get; set; }
+        public long? CODAUXILIAR { get; set; }
+        public string CODNCMEX { get; set; }
+        public long? CODFISCAL { get; set; }
     }
 }
