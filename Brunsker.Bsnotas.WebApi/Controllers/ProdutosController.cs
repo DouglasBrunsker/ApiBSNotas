@@ -12,7 +12,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize]
     public class ProdutosController : ControllerBase
     {
         private readonly IProdutoRepository _rep;
