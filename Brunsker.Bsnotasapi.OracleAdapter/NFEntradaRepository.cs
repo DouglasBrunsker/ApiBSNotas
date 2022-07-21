@@ -180,7 +180,9 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                return await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                
+                var result = await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                return result;
             }
             catch (Exception e)
             {
@@ -609,7 +611,32 @@ namespace Brunsker.Bsnotas.OracleAdapter
             }
             return fornecedores;
         }
+
+        public async Task<IEnumerable<CodProd>> SearchCPROD(string chave)
+        {
+            IEnumerable<CodProd> fornecedores = null;
+
+            try
+            {
+                string query = $"SELECT CPROD FROM BSNOTASNOVO.BSNT_PRODUTO_NFE  WHERE CHAVE = '{chave}'";
+
+                using (var conn = new OracleConnection(_connectionString))
+                {
+                
+                   fornecedores = await conn.QueryAsync<CodProd>(query);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error: " + ex.Message);
+            }
+            return fornecedores;
+        }
     }
 }
+
+
+
+
 
 
