@@ -51,9 +51,10 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         }*/
 
         [HttpGet("ExibirICMS/{chave}/{CODPROD}")]
-        public async Task<ICMS> ExibirICMS(string chave, string CODPROD)
+        public async Task<ICMS> ExibirICMS(string chave, string cprod)
+
         {
-            var ICMS = await _rep.ExibirICMS(chave, CODPROD);
+            var ICMS = await _rep.ExibirICMS(chave, cprod);
 
             return ICMS;
         }
