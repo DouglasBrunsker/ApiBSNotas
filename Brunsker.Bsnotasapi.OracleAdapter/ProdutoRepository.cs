@@ -55,7 +55,7 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             return produtos;
         }
 
-        public async Task<ICMS> ExibirICMS(string chave, double CODPROD)
+        public async Task<ICMS> ExibirICMS(string chave, string CODPROD)
         {
             ICMS ICMS = null;
 
