@@ -271,13 +271,5 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return fornecedores;
         }
-
-        [HttpGet("buscarCprod/chave")]
-        public async Task<IEnumerable<CodProd>> BuscaCPROD(string chave)
-        {
-            var CPROD = await _rep.SearchCPROD(chave);
-
-            return CPROD;
-        }
     }
 }

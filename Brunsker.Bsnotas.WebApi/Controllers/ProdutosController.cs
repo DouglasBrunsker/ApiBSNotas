@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Brunsker.Bsnotas.Domain.Models;
 using Brunsker.Bsnotas.WebApi.Helpers;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 using Brunsker.Bsnotasapi.Domain.Models;
@@ -49,6 +50,14 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return NoContent();
         }*/
+
+        [HttpGet("buscarCprod/chave")]
+        public async Task<IEnumerable<CodProd>> BuscaCPROD(string chave)
+        {
+            var CPROD = await _rep.SearchCPROD(chave);
+
+            return CPROD;
+        }
 
         [HttpGet("ExibirICMS/{chave}/{CODPROD}")]
         public async Task<ICMS> ExibirICMS(string chave, string cprod)

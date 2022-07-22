@@ -27,6 +27,5 @@ namespace Brunsker.Bsnotasapi.Domain.Interfaces
         Task<IEnumerable<Contas>> SelectContas(long seqCliente);
         Task<bool> RemovePreEntrada(string chave);
         Task<IEnumerable<FornecedoresAssociados>>SelectFornecedoresAssociados(long seqCliente, string cnpj);
-        Task<IEnumerable<CodProd>> SearchCPROD(string chave);
     }
 }
