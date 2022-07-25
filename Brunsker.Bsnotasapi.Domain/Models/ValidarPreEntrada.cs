@@ -10,6 +10,5 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public int CODFILIAL { get; set; }
         public string CHAVE { get; set; }
         public long? NUMPED { get; set; }
-        public string COPROD { get; set; }
     }
 }
