@@ -51,21 +51,21 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             return NoContent();
         }*/
 
-        [HttpGet("buscarCprod/chave")]
-        public async Task<IEnumerable<CodProd>> BuscaCPROD(string chave)
-        {
-            var CPROD = await _rep.SearchCPROD(chave);
+        //[HttpGet("buscarCprod/chave")]
+        //public async Task<IEnumerable<CodProd>> BuscaCPROD(string chave)
+        //{
+        //    var CPROD = await _rep.SearchCPROD(chave);
 
-            return CPROD;
-        }
+        //    return CPROD;
+        //}
 
-        [HttpGet("ExibirICMS/")]
-        public async Task<ICMS> ExibirICMS(string chave, string cprod)
+        //[HttpGet("ExibirICMS/")]
+        //public async Task<ICMS> ExibirICMS(string chave, string cprod)
 
-        {
-            var ICMS = await _rep.ExibirICMS(chave, cprod);
+        //{
+        //    var ICMS = await _rep.ExibirICMS(chave, cprod);
 
-            return ICMS;
-        }
+        //    return ICMS;
+        //}
     }
 }
