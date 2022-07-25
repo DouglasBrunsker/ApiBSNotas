@@ -411,6 +411,8 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     parms.Add("pCODFILIAL", validar.CODFILIAL);
                     parms.Add("pCHAVE", validar.CHAVE);
                     parms.Add("pNUMPED", validar.NUMPED);
+                    parms.Add("pCOPROD", validar.COPROD);
+
                     parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                     result = await conn.QueryAsync<ResultadoValidacaoPreEntrada>("PKG_PRE_ENTRADA.VALIDAR_PREENTRADA", parms, commandType: CommandType.StoredProcedure);
