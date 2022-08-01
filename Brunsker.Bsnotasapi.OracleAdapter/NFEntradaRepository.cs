@@ -177,9 +177,12 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 dynamicParameters.Add("pSTATUSMANIFNAOREALIZADA", pesquisa.STATUSMANIFNAOREALIZADA == true ? 1 : 0);
                 dynamicParameters.Add("pNFUSOECONSUMO", pesquisa.NFUSOECONSUMO == true ? 1 : 0);
                 dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);
+
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                return await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                
+                var result = await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
+                return result;
             }
             catch (Exception e)
             {
@@ -346,7 +349,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = "pkg_webserv_insert_bsnotas.SELECT_RELACAO_WEB_SERVICES";
+                string sql = "PKG_WEBSERV_INSERT_BSNOTAS.SELECT_RELACAO_WEB_SERVICES";
 
                 using (var conn = new OracleConnection(_connectionString))
                 {
@@ -396,7 +399,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                string sql = "pkg_pre_entrada.VALIDAR_PREENTRADA";
+                 
 
                 using (var conn = new OracleConnection(_connectionString))
                 {
@@ -405,12 +408,13 @@ namespace Brunsker.Bsnotas.OracleAdapter
                     var parms = new OracleDynamicParameters();
 
                     parms.Add("pSEQ_CLIENTE", validar.SEQ_CLIENTE);
-                    parms.Add("pCHAVE", validar.CHAVE);
                     parms.Add("pCODFILIAL", validar.CODFILIAL);
+                    parms.Add("pCHAVE", validar.CHAVE);
                     parms.Add("pNUMPED", validar.NUMPED);
+
                     parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    result = await conn.QueryAsync<ResultadoValidacaoPreEntrada>(sql, parms, commandType: CommandType.StoredProcedure);
+                    result = await conn.QueryAsync<ResultadoValidacaoPreEntrada>("PKG_PRE_ENTRADA.VALIDAR_PREENTRADA", parms, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
@@ -610,5 +614,9 @@ namespace Brunsker.Bsnotas.OracleAdapter
         }
     }
 }
+
+
+
+
 
 

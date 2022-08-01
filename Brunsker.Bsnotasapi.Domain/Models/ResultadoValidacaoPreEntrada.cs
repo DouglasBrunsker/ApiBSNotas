@@ -2,8 +2,9 @@ namespace Brunsker.Bsnotasapi.Domain.Models
 {
     public class ResultadoValidacaoPreEntrada
     {
+        public string EXIBIRPISCOFINS { get; set; }
         public string CNPJ_OK { get; set; }
-        public long CODPROD { get; set; }
+        public long COPROD { get; set; }
         public string DESCRICAO { get; set; }
         public string EMBALAGEM { get; set; }
         public string UNIDADE { get; set; }
