@@ -20,7 +20,7 @@ namespace Brunsker.Bsnotas.WebApi.Extensions
 
             services.addApplicationService();
 
-            services.AddOracleAdapterRespository(configuration);
+            services.AddOracleAdapterRespository();
 
             services.AddHttpContextAccessor();
 
