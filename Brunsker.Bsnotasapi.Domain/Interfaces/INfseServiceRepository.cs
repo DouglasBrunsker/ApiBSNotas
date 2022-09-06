@@ -6,8 +6,9 @@ namespace Brunsker.Bsnotas.Domain.Interfaces
 {
     public interface INfseServiceRepository
     {
-        Task<IEnumerable<SearchNfse>> GetTotalizadoresAsync(SearchNfse searchNfse);
-        Task<IEnumerable<SearchNfse>> GetRecebidasDiaAsync(SearchNfse searchNfse);
-        Task<IEnumerable<SearchNf>> GetNfseAsync(SearchNf searchNf);
+        Task<IEnumerable<Totalizador>> GetTotalizadoresAsync(SearchNfse searchNfse);
+        Task<IEnumerable<NotasDia>> GetRecebidasDiaAsync(SearchNfse searchNfse);
+        Task<IEnumerable<Nfse>> GetNfseAsync(SearchNf searchNf);
+        Task<IEnumerable<Company>> GetEmpresasAsync(SearchCompany searchCompany);
     }
 }

@@ -12,24 +12,24 @@ namespace Brunsker.Bsnotas.Domain.Models
         [NameParamProcedure("pDATAFIM")]
         public DateTime DataFinal { get; set; }
         [NameParamProcedure("pPRESTADOR_CNPJ")]
-        public string PrestadorCnpj { get; set; }
+        public string? PrestadorCnpj { get; set; }
         [NameParamProcedure("pTOMADOR_CNPJ")]
-        public string TomadorCnpj { get; set; }
+        public string? TomadorCnpj { get; set; }
         [NameParamProcedure("pNUMERO_RPS")]
-        public int NumeroRps { get; set; }
+        public int? NumeroRps { get; set; }
         [NameParamProcedure("pPRESTADOR_RAZAO_SOCIAL")]
-        public string PrestadorRazaoSocial { get; set; }
+        public string? PrestadorRazaoSocial { get; set; }
         [NameParamProcedure("pTOMADOR_RAZAO_SOCIAL")]
-        public string TomadorRazaoSocial { get; set; }
+        public string? TomadorRazaoSocial { get; set; }
         [NameParamProcedure("pSTATUSNORMAL")]
-        public int StatusNormal { get; set; } = 0;
+        public int? StatusNormal { get; set; }
         [NameParamProcedure("pSTATUSCANCELADA")]
-        public int StatusCancelada { get; set; } = 0;
+        public int? StatusCancelada { get; set; }
         [NameParamProcedure("pSTATUSEXTRAVIADA")]
-        public int StatusExtraviada { get; set; } = 0;
+        public int? StatusExtraviada { get; set; }
         [NameParamProcedure("pSTATUSLOTE")]
-        public int StatusLote { get; set; } = 0;
+        public int? StatusLote { get; set; }
         [NameParamProcedure("pEMPRESASCADASTRADAS")]
-        public string EmpresasCadastradas { get; set; }
+        public string? EmpresasCadastradas { get; set; }
     }
 }

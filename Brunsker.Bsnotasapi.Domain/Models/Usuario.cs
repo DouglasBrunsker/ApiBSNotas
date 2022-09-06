@@ -8,5 +8,6 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public string SENHA { get; set; }
         public long SEQ_CLIENTE { get; set; }
         public string AVATAR { get; set; }
+        public string NFESERVICO_ATIVO { get; set; }
     }
 }

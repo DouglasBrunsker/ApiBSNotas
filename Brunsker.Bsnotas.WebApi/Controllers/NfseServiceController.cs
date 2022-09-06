@@ -1,5 +1,11 @@
-﻿using Brunsker.Bsnotas.Domain.Interfaces;
-using Brunsker.Bsnotas.Domain.Models;
+﻿using Brunsker.Bsnotas.Application.Interfaces;
+using Brunsker.Bsnotas.Application.Requests.SearchCompany;
+using Brunsker.Bsnotas.Application.Requests.SearchNf;
+using Brunsker.Bsnotas.Application.Requests.SearchNfse;
+using Brunsker.Bsnotas.Application.Responses.Company;
+using Brunsker.Bsnotas.Application.Responses.Nfse;
+using Brunsker.Bsnotas.Application.Responses.NotasDia;
+using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.WebApi.ControllersAttributes;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,26 +17,31 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
     [ApiController]
     public class NfseServiceController : ControllerBase
     {
-        private readonly INfseServiceRepository _nfseServiceRepository;
+        private readonly INfseServicoService _nfseServicoService;
 
-        public NfseServiceController(INfseServiceRepository nfseServiceRepository)
+        public NfseServiceController(INfseServicoService nfseServicoService)
         {
-            _nfseServiceRepository = nfseServiceRepository;
+            _nfseServicoService = nfseServicoService;
         }
 
-        [QueryCommandsResponseTypes]
         [HttpGet("get_totalizadores")]
-        public async Task<IEnumerable<SearchNfse>> GetTotalizadoresAsync([FromBody] SearchNfse searchNfse) =>
-            await _nfseServiceRepository.GetTotalizadoresAsync(searchNfse);
-
         [QueryCommandsResponseTypes]
+        public async Task<IEnumerable<TotalizadorResponse>> GetTotalizadoresAsync([FromQuery] SearchNfseRequest searchNfseRequest) =>
+            await _nfseServicoService.GetTotalizadoresAsync(searchNfseRequest);
+
         [HttpGet("get_recebidas")]
-        public async Task<IEnumerable<SearchNfse>> GetRecebidasDiaAsync([FromBody] SearchNfse searchNfse) =>
-            await _nfseServiceRepository.GetRecebidasDiaAsync(searchNfse);
-
         [QueryCommandsResponseTypes]
+        public async Task<IEnumerable<NotasDiaResponse>> GetRecebidasDiaAsync([FromQuery] SearchNfseRequest searchNfseRequest) =>
+            await _nfseServicoService.GetRecebidasDiaAsync(searchNfseRequest);
+
         [HttpGet("get_nfse")]
-        public async Task<IEnumerable<SearchNf>> GetNfseAsync([FromBody] SearchNf searchNf) =>
-            await _nfseServiceRepository.GetNfseAsync(searchNf);
+        [QueryCommandsResponseTypes]
+        public async Task<IEnumerable<NfseResponse>> GetNfseAsync([FromQuery] SearchNfRequest searchNfRequest) =>
+            await _nfseServicoService.GetNfseAsync(searchNfRequest);
+
+        [HttpGet("get_companys")]
+        [QueryCommandsResponseTypes]
+        public async Task<IEnumerable<CompanyResponse>> GetEmpresasAsync([FromQuery] SearchCompanyRequest searchCompanyRequest) =>
+            await _nfseServicoService.GetEmpresasAsync(searchCompanyRequest);
     }
 }
