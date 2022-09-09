@@ -31,15 +31,18 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
             {
                 using (var oracleConnection = new OracleConnection(_configuration.GetConnectionString("OracleConnection")))
                 {
+                    if (oracleConnection.State == ConnectionState.Closed) 
+                        oracleConnection.Open();
+
                     var oracleDynamicParameters = new OracleDynamicParameters();
                     var properties = entry.GetType().GetProperties();
+                    
                     foreach (var propertyInfo in properties)
                     {
                         var nameParamProcedure = (AttributeNameProcedure.NameParamProcedure)propertyInfo.GetCustomAttributes(typeof(AttributeNameProcedure.NameParamProcedure), inherit: false).FirstOrDefault();
+                        
                         if (nameParamProcedure != null)
-                        {
                             oracleDynamicParameters.Add(nameParamProcedure.Name ?? ("p" + propertyInfo.Name), propertyInfo.GetValue(entry));
-                        }
                     }
 
                     oracleDynamicParameters.Add("CUR_OUT", null, OracleMappingType.RefCursor, ParameterDirection.Output);

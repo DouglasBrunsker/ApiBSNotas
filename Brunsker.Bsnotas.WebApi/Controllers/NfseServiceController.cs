@@ -7,12 +7,15 @@ using Brunsker.Bsnotas.Application.Responses.Nfse;
 using Brunsker.Bsnotas.Application.Responses.NotasDia;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.WebApi.ControllersAttributes;
+using Brunsker.Bsnotas.WebApi.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class NfseServiceController : ControllerBase
@@ -36,8 +39,8 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
         [HttpGet("get_nfse")]
         [QueryCommandsResponseTypes]
-        public async Task<IEnumerable<NfseResponse>> GetNfseAsync([FromQuery] SearchNfRequest searchNfRequest) =>
-            await _nfseServicoService.GetNfseAsync(searchNfRequest);
+        public async Task<Pagination<NfseResponse>> GetNfseAsync([FromQuery] int index, [FromQuery] int length, [FromQuery] SearchNfRequest searchNfRequest) =>
+            new Pagination<NfseResponse>(index, length, await _nfseServicoService.GetNfseAsync(searchNfRequest));
 
         [HttpGet("get_companys")]
         [QueryCommandsResponseTypes]

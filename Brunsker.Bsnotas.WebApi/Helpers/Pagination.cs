@@ -9,6 +9,7 @@ namespace Brunsker.Bsnotas.WebApi.Helpers
         public int Total { get; set; }
         public double TotalPage { get; set; }
         public IEnumerable<T> Data { get; set; }
+        
         public Pagination(int index, int length, IEnumerable<T> data)
         {
             Total = data.Count();
