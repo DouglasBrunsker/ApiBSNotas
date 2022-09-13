@@ -2,12 +2,15 @@
 using Brunsker.Bsnotas.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Oracle.ManagedDataAccess.Client;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
 {
-    public class NfseServicoRepository : BaseRepository, INfseServiceRepository
+    public sealed class NfseServicoRepository : BaseRepository, INfseServiceRepository
     {
         public NfseServicoRepository(IConfiguration configuration, ILogger<object> logger) : base(configuration, logger)
         {
@@ -24,5 +27,8 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
 
         public async Task<IEnumerable<Company>> GetEmpresasAsync(SearchCompany searchCompany) =>
             await QueryAsync<Company, SearchCompany>(searchCompany, "PKG_BS_NF_SERVICO2.PESQ_EMPRESAS");
+
+        public async Task<string> GetArquivoXmlBySeqArquivoXmlNfse(int seqArquivoXmlNfse) =>
+            await ParameterLessQueryFirstOrDefaultAsyncReturnObject<string>($@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_NFSE t WHERE T.SEQ_ARQUIVOXML_NFSE = '{seqArquivoXmlNfse}'");
     }
 }

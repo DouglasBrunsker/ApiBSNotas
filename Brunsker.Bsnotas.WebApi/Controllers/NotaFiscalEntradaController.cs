@@ -19,7 +19,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class NotaFiscalEntradaController : ControllerBase
     {
         private readonly INFEntradaRepository _rep;
@@ -132,6 +132,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
 
             return NoContent();
         }
+
         [HttpGet("GerarCCePDF/{chave}")]
         public async Task<IActionResult> GerarCCePDF(string chave)
         {

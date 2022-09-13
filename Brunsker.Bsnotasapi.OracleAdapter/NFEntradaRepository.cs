@@ -13,7 +13,7 @@ using Brunsker.Bsnotasapi.Domain.Interfaces;
 
 namespace Brunsker.Bsnotas.OracleAdapter
 {
-    public class NFEntradaRepository : INFEntradaRepository
+    public sealed class NFEntradaRepository : INFEntradaRepository
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<NFEntradaRepository> _logger;
@@ -270,19 +270,17 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 return null;
             }
         }
+
         public async Task<string> SelectArquivoXml(string chave)
         {
-            string sql = $@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_NFE_ENTRADA t WHERE T.CHAVENFE = '{chave}'";
-
             try
             {
-                using (var conn = new OracleConnection(_connectionString))
+                using (var oracleConnection = new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    if (oracleConnection.State == ConnectionState.Closed)
+                        oracleConnection.Open();
 
-                    var result = await conn.QueryFirstOrDefaultAsync<string>(sql);
-
-                    return result;
+                    return await oracleConnection.QueryFirstOrDefaultAsync<string>($@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_NFE_ENTRADA t WHERE T.CHAVENFE = '{chave}'");
                 }
             }
             catch (Exception ex)
@@ -292,6 +290,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
                 return null;
             }
         }
+
         public async Task<string> SelectArquivoXmlCCe(string chave)
         {
             string sql = $@"SELECT CCE.ARQUIVO_XML XML_CONTEUDO FROM BSNT_CCE_NFE CCE WHERE CCE.CHAVE = '{chave}'";

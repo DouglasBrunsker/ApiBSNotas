@@ -8,5 +8,6 @@ namespace Brunsker.Bsnotasapi.Domain.Dtos
         public string LOGIN { get; set; }
         public string TOKEN { get; set; }
         public string AVATAR { get; set; }
+        public string NFESERVICO_ATIVO { get; set; }
     }
 }

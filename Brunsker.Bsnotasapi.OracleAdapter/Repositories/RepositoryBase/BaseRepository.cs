@@ -16,46 +16,74 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<object> _logger;
+        private string _connectionString;
 
         public BaseRepository(IConfiguration configuration, ILogger<object> logger)
         {
             _configuration = configuration;
             _logger = logger;
+            _connectionString = _configuration.GetConnectionString("OracleConnection");
         }
 
-        public async Task<IEnumerable<TReturn>> QueryAsync<TReturn, TEntry>(TEntry entry, string sql)
+        protected async Task<IEnumerable<TReturn>> QueryAsync<TReturn, TEntry>(TEntry entry, string sql)
             where TReturn : class
             where TEntry : class
         {
             try
             {
-                using (var oracleConnection = new OracleConnection(_configuration.GetConnectionString("OracleConnection")))
+                using (var oracleConnection = new OracleConnection(_connectionString))
                 {
                     if (oracleConnection.State == ConnectionState.Closed) 
                         oracleConnection.Open();
 
-                    var oracleDynamicParameters = new OracleDynamicParameters();
-                    var properties = entry.GetType().GetProperties();
-                    
-                    foreach (var propertyInfo in properties)
-                    {
-                        var nameParamProcedure = (AttributeNameProcedure.NameParamProcedure)propertyInfo.GetCustomAttributes(typeof(AttributeNameProcedure.NameParamProcedure), inherit: false).FirstOrDefault();
-                        
-                        if (nameParamProcedure != null)
-                            oracleDynamicParameters.Add(nameParamProcedure.Name ?? ("p" + propertyInfo.Name), propertyInfo.GetValue(entry));
-                    }
-
-                    oracleDynamicParameters.Add("CUR_OUT", null, OracleMappingType.RefCursor, ParameterDirection.Output);
+                    var oracleDynamicParameters = BuildDefaultOracleDynamicParameters(entry);
 
                     return await oracleConnection.QueryAsync<TReturn>(sql, oracleDynamicParameters, null, null, CommandType.StoredProcedure);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                _logger.LogError("Error: " + ex.Message);
+                _logger.LogError("Error: " + exception.Message);
+                return null;
+            }
+        }
+
+        protected async Task<TReturn> ParameterLessQueryFirstOrDefaultAsyncReturnObject<TReturn>(string sql)
+        {
+            try
+            {
+                using (var oracleConnection = new OracleConnection(_connectionString))
+                {
+                    if (oracleConnection.State == ConnectionState.Closed)
+                        oracleConnection.Open();
+
+                    return await oracleConnection.QueryFirstOrDefaultAsync<TReturn>(sql);
+                }
+            }
+            catch(Exception exception)
+            {
+                _logger.LogError("Error: " + exception.Message);
+                return default(TReturn);
+            }
+        }
+
+        private OracleDynamicParameters BuildDefaultOracleDynamicParameters<TEntry>(TEntry entry)
+            where TEntry : class
+        {
+            var oracleDynamicParameters = new OracleDynamicParameters();
+            var properties = entry.GetType().GetProperties();
+
+            foreach (var propertyInfo in properties)
+            {
+                var nameParamProcedure = (AttributeNameProcedure.NameParamProcedure)propertyInfo.GetCustomAttributes(typeof(AttributeNameProcedure.NameParamProcedure), inherit: false).FirstOrDefault();
+
+                if (nameParamProcedure != null)
+                    oracleDynamicParameters.Add(nameParamProcedure.Name ?? ("p" + propertyInfo.Name), propertyInfo.GetValue(entry));
             }
 
-            return null;
+            oracleDynamicParameters.Add("CUR_OUT", null, OracleMappingType.RefCursor, ParameterDirection.Output);
+
+            return oracleDynamicParameters;
         }
     }
 }

@@ -4,6 +4,7 @@ namespace Brunsker.Bsnotas.Domain.Models
 {
     public class Nfse
     {
+        public int SEQ_ARQUIVOXML_NFSE { get; set; }
         public string APELIDO { get; set; }
         public string ARQUIVO_XML { get; set; }
         public string PRESTADOR_RAZAO_SOCIAL { get; set; }

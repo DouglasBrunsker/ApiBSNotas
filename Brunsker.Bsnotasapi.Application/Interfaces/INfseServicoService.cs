@@ -6,6 +6,7 @@ using Brunsker.Bsnotas.Application.Responses.Nfse;
 using Brunsker.Bsnotas.Application.Responses.NotasDia;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.Application.Interfaces
@@ -16,5 +17,6 @@ namespace Brunsker.Bsnotas.Application.Interfaces
         Task<IEnumerable<NotasDiaResponse>> GetRecebidasDiaAsync(SearchNfseRequest searchNfseRequest);
         Task<IEnumerable<NfseResponse>> GetNfseAsync(SearchNfRequest searchNfRequest);
         Task<IEnumerable<CompanyResponse>> GetEmpresasAsync(SearchCompanyRequest searchCompanyRequest);
+        Task<Stream> GetPdfBySeqArquivoXmlNfseAsync(int seqArquivoXmlNfse);
     }
 }

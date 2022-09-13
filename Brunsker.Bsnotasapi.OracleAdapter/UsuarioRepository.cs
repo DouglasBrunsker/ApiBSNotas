@@ -71,33 +71,34 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             }
             return usuario;
         }
+        
         public async Task<Usuario> Login(string login, string senha)
         {
-            Usuario usuario = null;
-
             try
             {
                 string sql = "pkg_clientes_nfe.LOGIN_USUARIO";
 
-                using (var conn = new OracleConnection(_connectionString))
+                using (var oracleConnection= new OracleConnection(_connectionString))
                 {
-                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    if (oracleConnection.State == ConnectionState.Closed) 
+                        oracleConnection.Open();
 
-                    var parms = new OracleDynamicParameters();
+                    var oracleDynamicParameters = new OracleDynamicParameters();
 
-                    parms.Add("pLOGIN", login);
-                    parms.Add("pSENHA", senha);
-                    parms.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                    oracleDynamicParameters.Add("pLOGIN", login);
+                    oracleDynamicParameters.Add("pSENHA", senha);
+                    oracleDynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                    usuario = await conn.QuerySingleOrDefaultAsync<Usuario>(sql, parms, commandType: CommandType.StoredProcedure);
+                    return await oracleConnection.QuerySingleOrDefaultAsync<Usuario>("pkg_clientes_nfe.LOGIN_USUARIO", oracleDynamicParameters, commandType: CommandType.StoredProcedure);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error: " + ex.Message);
+                return null;
             }
-            return usuario;
         }
+
         public async Task<ParametrosCliente> SelectParametros(long id)
         {
             try

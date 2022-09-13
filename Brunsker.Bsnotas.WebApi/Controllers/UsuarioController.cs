@@ -70,7 +70,8 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         {
             var usuario = await _rep.Login(loginDto.Login, loginDto.Senha);
 
-            if (usuario == null) return Unauthorized();
+            if (usuario == null) 
+                return Unauthorized();
 
             return new UsuarioDto
             {
@@ -78,7 +79,8 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
                 TOKEN = _services.GeraToken(usuario),
                 SEQ_CLIENTE = usuario.SEQ_CLIENTE,
                 NOME = usuario.NOME,
-                AVATAR = usuario.AVATAR
+                AVATAR = usuario.AVATAR,
+                NFESERVICO_ATIVO = usuario.NFESERVICO_ATIVO
             };
         }
 

@@ -9,7 +9,9 @@ using Brunsker.Bsnotas.Application.Responses.NotasDia;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.Domain.Interfaces;
 using Brunsker.Bsnotas.Domain.Models;
+using Brunsker.Bsnotasapi.Domain.Interfaces;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.Application.Services
@@ -17,10 +19,12 @@ namespace Brunsker.Bsnotas.Application.Services
     public class NfseServicoService : INfseServicoService
     {
         private readonly INfseServiceRepository _nfseServiceRepository;
+        private readonly INFService _nFService;
 
-        public NfseServicoService(INfseServiceRepository nfseServiceRepository)
+        public NfseServicoService(INfseServiceRepository nfseServiceRepository, INFService nFService)
         {
             _nfseServiceRepository = nfseServiceRepository;
+            _nFService = nFService;
         }
 
         public async Task<IEnumerable<TotalizadorResponse>> GetTotalizadoresAsync(SearchNfseRequest searchNfseRequest)
@@ -57,6 +61,13 @@ namespace Brunsker.Bsnotas.Application.Services
             var companyEnumerable = await _nfseServiceRepository.GetEmpresasAsync(searchCompany);
 
             return companyEnumerable.MapTo<IEnumerable<Company>, IEnumerable<CompanyResponse>>();
+        }
+
+        public async Task<Stream> GetPdfBySeqArquivoXmlNfseAsync(int seqArquivoXmlNfse)
+        {
+            var xmlBody = await _nfseServiceRepository.GetArquivoXmlBySeqArquivoXmlNfse(seqArquivoXmlNfse);
+
+            return await _nFService.GerarPdfAsync(xmlBody);
         }
     }
 }

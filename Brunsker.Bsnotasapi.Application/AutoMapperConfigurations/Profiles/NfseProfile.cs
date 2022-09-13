@@ -9,6 +9,7 @@ namespace Brunsker.Bsnotas.Application.AutoMapperConfigurations.Profiles
         public NfseProfile()
         {
             CreateMap<Nfse, NfseResponse>()
+                .ForMember(nr => nr.SeqArquivoXmlNfse, map => map.MapFrom(n => n.SEQ_ARQUIVOXML_NFSE))
                 .ForMember(nr => nr.NickName, map => map.MapFrom(n => n.APELIDO))
                 .ForMember(nr => nr.XmlFile, map => map.MapFrom(n => n.ARQUIVO_XML))
                 .ForMember(nr => nr.SocialReasonProvider, map => map.MapFrom(n => n.PRESTADOR_RAZAO_SOCIAL))

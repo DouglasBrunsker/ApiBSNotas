@@ -4,6 +4,7 @@ namespace Brunsker.Bsnotas.Application.Responses.Nfse
 {
     public class NfseResponse
     {
+        public int SeqArquivoXmlNfse { get; set; }
         public string NickName { get; set; }
         public string XmlFile { get; set; }
         public string SocialReasonProvider { get; set; }
