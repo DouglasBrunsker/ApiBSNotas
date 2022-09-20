@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Brunsker.Bsnotas.Application.Responses.Nfse
+namespace Brunsker.Bsnotas.Application.Responses.Notas
 {
     public class NfseResponse
     {

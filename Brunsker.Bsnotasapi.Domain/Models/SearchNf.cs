@@ -8,9 +8,9 @@ namespace Brunsker.Bsnotas.Domain.Models
         [NameParamProcedure("pSEQ_CLIENTE")]
         public int SeqCliente { get; set; }
         [NameParamProcedure("pDATAINI")]
-        public DateTime DataInicial { get; set; }
+        public DateTime? DataInicial { get; set; }
         [NameParamProcedure("pDATAFIM")]
-        public DateTime DataFinal { get; set; }
+        public DateTime? DataFinal { get; set; }
         [NameParamProcedure("pPRESTADOR_CNPJ")]
         public string? PrestadorCnpj { get; set; }
         [NameParamProcedure("pTOMADOR_CNPJ")]

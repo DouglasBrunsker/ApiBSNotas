@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Brunsker.Bsnotas.Application.Requests.SearchNfse
+namespace Brunsker.Bsnotas.Application.Requests.Searchs
 {
     public class SearchNfseRequest
     {

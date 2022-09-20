@@ -1,4 +1,4 @@
-﻿namespace Brunsker.Bsnotas.Application.Requests.SearchCompany
+﻿namespace Brunsker.Bsnotas.Application.Requests.Searchs
 {
     public class SearchCompanyRequest
     {

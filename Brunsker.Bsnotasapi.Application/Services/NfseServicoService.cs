@@ -1,17 +1,14 @@
 ﻿using Brunsker.Bsnotas.Application.AutoMapperConfigurations;
 using Brunsker.Bsnotas.Application.Interfaces;
-using Brunsker.Bsnotas.Application.Requests.SearchCompany;
-using Brunsker.Bsnotas.Application.Requests.SearchNf;
-using Brunsker.Bsnotas.Application.Requests.SearchNfse;
+using Brunsker.Bsnotas.Application.Requests.GeneratePdf;
+using Brunsker.Bsnotas.Application.Requests.Searchs;
 using Brunsker.Bsnotas.Application.Responses.Company;
-using Brunsker.Bsnotas.Application.Responses.Nfse;
-using Brunsker.Bsnotas.Application.Responses.NotasDia;
+using Brunsker.Bsnotas.Application.Responses.Notas;
+using Brunsker.Bsnotas.Application.Responses.Pdf;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.Domain.Interfaces;
 using Brunsker.Bsnotas.Domain.Models;
-using Brunsker.Bsnotasapi.Domain.Interfaces;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.Application.Services
@@ -19,12 +16,10 @@ namespace Brunsker.Bsnotas.Application.Services
     public class NfseServicoService : INfseServicoService
     {
         private readonly INfseServiceRepository _nfseServiceRepository;
-        private readonly INFService _nFService;
 
-        public NfseServicoService(INfseServiceRepository nfseServiceRepository, INFService nFService)
+        public NfseServicoService(INfseServiceRepository nfseServiceRepository)
         {
             _nfseServiceRepository = nfseServiceRepository;
-            _nFService = nFService;
         }
 
         public async Task<IEnumerable<TotalizadorResponse>> GetTotalizadoresAsync(SearchNfseRequest searchNfseRequest)
@@ -63,11 +58,13 @@ namespace Brunsker.Bsnotas.Application.Services
             return companyEnumerable.MapTo<IEnumerable<Company>, IEnumerable<CompanyResponse>>();
         }
 
-        public async Task<Stream> GetPdfBySeqArquivoXmlNfseAsync(int seqArquivoXmlNfse)
+        public async Task<PdfResponse> GeneratePdfAsync(GeneratePdfRequest generatePdfRequest)
         {
-            var xmlBody = await _nfseServiceRepository.GetArquivoXmlBySeqArquivoXmlNfse(seqArquivoXmlNfse);
+            var generatePdf = generatePdfRequest.MapTo<GeneratePdfRequest, GeneratePdf>();
 
-            return await _nFService.GerarPdfAsync(xmlBody);
+            var pdf = await _nfseServiceRepository.GeneratePdfAsync(generatePdf);
+
+            return pdf.MapTo<Pdf, PdfResponse>();
         }
     }
 }

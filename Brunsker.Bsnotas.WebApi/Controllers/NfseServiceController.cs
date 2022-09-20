@@ -1,10 +1,9 @@
 ﻿using Brunsker.Bsnotas.Application.Interfaces;
-using Brunsker.Bsnotas.Application.Requests.SearchCompany;
-using Brunsker.Bsnotas.Application.Requests.SearchNf;
-using Brunsker.Bsnotas.Application.Requests.SearchNfse;
+using Brunsker.Bsnotas.Application.Requests.GeneratePdf;
+using Brunsker.Bsnotas.Application.Requests.Searchs;
 using Brunsker.Bsnotas.Application.Responses.Company;
-using Brunsker.Bsnotas.Application.Responses.Nfse;
-using Brunsker.Bsnotas.Application.Responses.NotasDia;
+using Brunsker.Bsnotas.Application.Responses.Notas;
+using Brunsker.Bsnotas.Application.Responses.Pdf;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.WebApi.ControllersAttributes;
 using Brunsker.Bsnotas.WebApi.Helpers;
@@ -20,7 +19,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [QueryCommandsResponseTypes]
-    public class NfseServiceController : ControllerBase
+    public sealed class NfseServiceController : ControllerBase
     {
         private readonly INfseServicoService _nfseServicoService;
 
@@ -46,7 +45,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             await _nfseServicoService.GetEmpresasAsync(searchCompanyRequest);
 
         [HttpGet("generate_pdf")]
-        public async Task<Stream> GetPdfBySeqArquivoXmlNfseAsync(int seqArquivoXmlNfse) =>
-            await _nfseServicoService.GetPdfBySeqArquivoXmlNfseAsync(seqArquivoXmlNfse);
+        public async Task<PdfResponse> GeneratePdfAsync([FromQuery] GeneratePdfRequest generatePdfRequest) =>
+            await _nfseServicoService.GeneratePdfAsync(generatePdfRequest);
     }
 }

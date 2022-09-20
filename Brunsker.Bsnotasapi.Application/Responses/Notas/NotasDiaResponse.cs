@@ -1,4 +1,4 @@
-﻿namespace Brunsker.Bsnotas.Application.Responses.NotasDia
+﻿namespace Brunsker.Bsnotas.Application.Responses.Notas
 {
     public class NotasDiaResponse
     {

@@ -1,9 +1,8 @@
-﻿using Brunsker.Bsnotas.Application.Requests.SearchCompany;
-using Brunsker.Bsnotas.Application.Requests.SearchNf;
-using Brunsker.Bsnotas.Application.Requests.SearchNfse;
+﻿using Brunsker.Bsnotas.Application.Requests.GeneratePdf;
+using Brunsker.Bsnotas.Application.Requests.Searchs;
 using Brunsker.Bsnotas.Application.Responses.Company;
-using Brunsker.Bsnotas.Application.Responses.Nfse;
-using Brunsker.Bsnotas.Application.Responses.NotasDia;
+using Brunsker.Bsnotas.Application.Responses.Notas;
+using Brunsker.Bsnotas.Application.Responses.Pdf;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +16,6 @@ namespace Brunsker.Bsnotas.Application.Interfaces
         Task<IEnumerable<NotasDiaResponse>> GetRecebidasDiaAsync(SearchNfseRequest searchNfseRequest);
         Task<IEnumerable<NfseResponse>> GetNfseAsync(SearchNfRequest searchNfRequest);
         Task<IEnumerable<CompanyResponse>> GetEmpresasAsync(SearchCompanyRequest searchCompanyRequest);
-        Task<Stream> GetPdfBySeqArquivoXmlNfseAsync(int seqArquivoXmlNfse);
+        Task<PdfResponse> GeneratePdfAsync(GeneratePdfRequest generatePdfRequest);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Brunsker.Bsnotas.Domain.Interfaces;
 using Brunsker.Bsnotas.Domain.Models;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Oracle.ManagedDataAccess.Client;
@@ -28,7 +29,7 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
         public async Task<IEnumerable<Company>> GetEmpresasAsync(SearchCompany searchCompany) =>
             await QueryAsync<Company, SearchCompany>(searchCompany, "PKG_BS_NF_SERVICO2.PESQ_EMPRESAS");
 
-        public async Task<string> GetArquivoXmlBySeqArquivoXmlNfse(int seqArquivoXmlNfse) =>
-            await ParameterLessQueryFirstOrDefaultAsyncReturnObject<string>($@"SELECT T.ARQUIVO_XML FROM BSNT_ARQUIVOXML_NFSE t WHERE T.SEQ_ARQUIVOXML_NFSE = '{seqArquivoXmlNfse}'");
+        public async Task<Pdf> GeneratePdfAsync(GeneratePdf generatePdf) =>
+            await QueryFirstOrDefaultAsync<Pdf, GeneratePdf>(generatePdf, "PKG_BS_NF_SERVICO2.EMITEPDF_NOTA");
     }
 }

@@ -9,6 +9,7 @@ using Dapper;
 using Microsoft.Extensions.Logging;
 using Brunsker.AutoMapperProcedure.CustomAttributes;
 using System.Linq;
+using Microsoft.AspNetCore.Server.IIS.Core;
 
 namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
 {
@@ -44,7 +45,8 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
             catch (Exception exception)
             {
                 _logger.LogError("Error: " + exception.Message);
-                return null;
+
+                throw;
             }
         }
 
@@ -56,14 +58,43 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
                 {
                     if (oracleConnection.State == ConnectionState.Closed)
                         oracleConnection.Open();
+                    
+                    var oracleDynamicParameters = new OracleDynamicParameters();
+                    
+                    oracleDynamicParameters.Add("CUR_OUT", null, OracleMappingType.RefCursor, ParameterDirection.Output);
 
-                    return await oracleConnection.QueryFirstOrDefaultAsync<TReturn>(sql);
+                    return await oracleConnection.QueryFirstOrDefaultAsync<TReturn>(sql, oracleDynamicParameters);
                 }
             }
             catch(Exception exception)
             {
                 _logger.LogError("Error: " + exception.Message);
-                return default(TReturn);
+
+                throw;
+            }
+        }
+
+        protected async Task<TReturn> QueryFirstOrDefaultAsync<TReturn, TEntry>(TEntry entry, string sql)
+            where TReturn : class
+            where TEntry : class
+        {
+            try
+            {
+                using (var oracleConnection = new OracleConnection(_connectionString))
+                {
+                    if (oracleConnection.State == ConnectionState.Closed)
+                        oracleConnection.Open();
+
+                    var oracleDynamicParameters = BuildDefaultOracleDynamicParameters(entry);
+
+                    return await oracleConnection.QueryFirstOrDefaultAsync<TReturn>(sql, oracleDynamicParameters, null, null, CommandType.StoredProcedure);
+                }
+            }
+            catch(Exception exception)
+            {
+                _logger.LogError("Error: " + exception.Message);
+
+                throw;
             }
         }
 

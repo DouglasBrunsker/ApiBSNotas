@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
-using Brunsker.Bsnotas.Application.Responses.Nfse;
+using Brunsker.Bsnotas.Application.Responses.Notas;
 using Brunsker.Bsnotas.Domain.Models;
 
 namespace Brunsker.Bsnotas.Application.AutoMapperConfigurations.Profiles
 {
-    public class NfseProfile : Profile
+    public sealed class NotasProfile : Profile
     {
-        public NfseProfile()
+        public NotasProfile()
         {
+            CreateMap<NotasDia, NotasDiaResponse>()
+                .ForMember(nr => nr.Day, map => map.MapFrom(n => n.DIA))
+                .ForMember(nr => nr.TotalNotes, map => map.MapFrom(n => n.TOT_NF))
+                .ReverseMap();
+
             CreateMap<Nfse, NfseResponse>()
                 .ForMember(nr => nr.SeqArquivoXmlNfse, map => map.MapFrom(n => n.SEQ_ARQUIVOXML_NFSE))
                 .ForMember(nr => nr.NickName, map => map.MapFrom(n => n.APELIDO))

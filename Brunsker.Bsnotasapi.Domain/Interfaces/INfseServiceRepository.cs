@@ -10,6 +10,6 @@ namespace Brunsker.Bsnotas.Domain.Interfaces
         Task<IEnumerable<NotasDia>> GetRecebidasDiaAsync(SearchNfse searchNfse);
         Task<IEnumerable<Nfse>> GetNfseAsync(SearchNf searchNf);
         Task<IEnumerable<Company>> GetEmpresasAsync(SearchCompany searchCompany);
-        Task<string> GetArquivoXmlBySeqArquivoXmlNfse(int seqArquivoXmlNfse);
+        Task<Pdf> GeneratePdfAsync(GeneratePdf generatePdf);
     }
 }
