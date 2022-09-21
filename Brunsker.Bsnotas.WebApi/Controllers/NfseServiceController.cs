@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.WebApi.Controllers
 {
-//    [Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     [QueryCommandsResponseTypes]
