@@ -3,6 +3,7 @@ using Brunsker.Bsnotas.Application.Requests.GeneratePdf;
 using Brunsker.Bsnotas.Application.Requests.Searchs;
 using Brunsker.Bsnotas.Application.Responses.Company;
 using Brunsker.Bsnotas.Application.Responses.Notas;
+using Brunsker.Bsnotas.Application.Responses.Pdf;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.WebApi.ControllersAttributes;
 using Brunsker.Bsnotas.WebApi.Helpers;
@@ -43,11 +44,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             await _nfseServicoService.GetEmpresasAsync(searchCompanyRequest);
 
         [HttpGet("generate_pdf")]
-        public async Task<FileStreamResult> GeneratePdfAsync([FromQuery] GeneratePdfRequest generatePdfRequest)
-        {
-            var pdfResponse = await _nfseServicoService.GeneratePdfAsync(generatePdfRequest);
-            
-            return File(pdfResponse.ArquivoPdf, "application/pdf");
-        }
+        public async Task<PdfResponse> GeneratePdfAsync([FromQuery] GeneratePdfRequest generatePdfRequest) =>
+            await _nfseServicoService.GeneratePdfAsync(generatePdfRequest);
     }
 }
