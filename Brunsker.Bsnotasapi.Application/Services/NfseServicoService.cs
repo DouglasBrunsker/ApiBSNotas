@@ -9,11 +9,12 @@ using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.Domain.Interfaces;
 using Brunsker.Bsnotas.Domain.Models;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.Application.Services
 {
-    public class NfseServicoService : INfseServicoService
+    public sealed class NfseServicoService : INfseServicoService
     {
         private readonly INfseServiceRepository _nfseServiceRepository;
 
