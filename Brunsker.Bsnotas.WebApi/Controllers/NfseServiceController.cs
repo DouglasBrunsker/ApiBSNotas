@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.WebApi.Controllers
 {
-    [Authorize]
+//    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     [QueryCommandsResponseTypes]
@@ -47,7 +47,7 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         {
             var pdfResponse = await _nfseServicoService.GeneratePdfAsync(generatePdfRequest);
             
-            return File(pdfResponse.ArquivoPdf, "application/pdf", pdfResponse.NomePdf);
+            return File(pdfResponse.ArquivoPdf, "application/pdf");
         }
     }
 }
