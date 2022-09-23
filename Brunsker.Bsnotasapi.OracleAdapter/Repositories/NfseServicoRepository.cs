@@ -1,10 +1,8 @@
 ﻿using Brunsker.Bsnotas.Domain.Interfaces;
 using Brunsker.Bsnotas.Domain.Models;
-using Dapper;
+using Dapper.Oracle;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Oracle.ManagedDataAccess.Client;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -31,5 +29,18 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
 
         public async Task<Pdf> GeneratePdfAsync(GeneratePdf generatePdf) =>
             await QueryFirstOrDefaultAsync<Pdf, GeneratePdf>(generatePdf, "PKG_BS_NF_SERVICO2.EMITEPDF_NOTA");
+
+        public async Task<Nfse> GetNfseByIdAsync(int seqArquivoXmlNfse) =>
+            await QueryFirstOrDefaultAsyncWithOracleDynamicParameters<Nfse>(BuildGetNfseByIdAsyncOracleDynamicParameters(seqArquivoXmlNfse), "PKG_BS_NF_SERVICO2.EXPORTA_RESULTADO ");
+
+        private OracleDynamicParameters BuildGetNfseByIdAsyncOracleDynamicParameters(int seqArquivoXmlNfse)
+        {
+            var oracleDynamicParameters = new OracleDynamicParameters();
+
+            oracleDynamicParameters.Add("pSEQ_ARQUIVOXML_NFSE", seqArquivoXmlNfse);
+            oracleDynamicParameters.Add("CUR_OUT", null, OracleMappingType.RefCursor, ParameterDirection.Output);
+
+            return oracleDynamicParameters;
+        }
     }
 }

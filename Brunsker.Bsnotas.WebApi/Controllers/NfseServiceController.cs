@@ -10,6 +10,7 @@ using Brunsker.Bsnotas.WebApi.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.WebApi.Controllers
@@ -46,5 +47,17 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
         [HttpGet("generate_pdf")]
         public async Task<PdfResponse> GeneratePdfAsync([FromQuery] GeneratePdfRequest generatePdfRequest) =>
             await _nfseServicoService.GeneratePdfAsync(generatePdfRequest);
+
+        [HttpPost("exporta_nfse_pdf")]
+        public async Task<byte[]> ExportaNfsePdfsAsync([FromBody] IEnumerable<GeneratePdfRequest> generatePdfRequestList) =>
+            await _nfseServicoService.ExportaNfsePdfsAsync(generatePdfRequestList);
+
+        [HttpPost("exporta_nfse_excel")]
+        public async Task<byte[]> ExportaNfseExcelAsync([FromBody] IEnumerable<int> notasServicoIdEnumerable) =>
+            await _nfseServicoService.ExportaNfseExcelAsync(notasServicoIdEnumerable);
+
+        [HttpPost("exporta_nfse_xml")]
+        public async Task<byte[]> ExportaNfseXmlsAsync([FromBody] IEnumerable<int> notasServicoIdEnumerable) =>
+            await _nfseServicoService.ExportaNfseXmlsAsync(notasServicoIdEnumerable);
     }
 }

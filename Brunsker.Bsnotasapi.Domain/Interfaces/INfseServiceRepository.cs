@@ -11,5 +11,6 @@ namespace Brunsker.Bsnotas.Domain.Interfaces
         Task<IEnumerable<Nfse>> GetNfseAsync(SearchNf searchNf);
         Task<IEnumerable<Company>> GetEmpresasAsync(SearchCompany searchCompany);
         Task<Pdf> GeneratePdfAsync(GeneratePdf generatePdf);
+        Task<Nfse> GetNfseByIdAsync(int seqArquivoXmlNfse);
     }
 }

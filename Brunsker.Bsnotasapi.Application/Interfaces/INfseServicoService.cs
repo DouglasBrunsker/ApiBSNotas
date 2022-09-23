@@ -5,7 +5,6 @@ using Brunsker.Bsnotas.Application.Responses.Notas;
 using Brunsker.Bsnotas.Application.Responses.Pdf;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Brunsker.Bsnotas.Application.Interfaces
@@ -17,5 +16,8 @@ namespace Brunsker.Bsnotas.Application.Interfaces
         Task<IEnumerable<NfseResponse>> GetNfseAsync(SearchNfRequest searchNfRequest);
         Task<IEnumerable<CompanyResponse>> GetEmpresasAsync(SearchCompanyRequest searchCompanyRequest);
         Task<PdfResponse> GeneratePdfAsync(GeneratePdfRequest generatePdfRequest);
+        Task<byte[]> ExportaNfsePdfsAsync(IEnumerable<GeneratePdfRequest> generatePdfRequestList);
+        Task<byte[]> ExportaNfseExcelAsync(IEnumerable<int> notasServicoIdEnumerable);
+        Task<byte[]> ExportaNfseXmlsAsync(IEnumerable<int> notasServicoIdEnumerable);
     }
 }

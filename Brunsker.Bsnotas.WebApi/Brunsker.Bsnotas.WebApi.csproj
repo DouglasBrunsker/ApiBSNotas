@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Dtos\" />
+    <Folder Include="wwwroot\NFSE\" />
   </ItemGroup>
 
 </Project>

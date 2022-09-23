@@ -34,8 +34,7 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
             {
                 using (var oracleConnection = new OracleConnection(_connectionString))
                 {
-                    if (oracleConnection.State == ConnectionState.Closed) 
-                        oracleConnection.Open();
+                    OpenOracleConnection(oracleConnection);
 
                     var oracleDynamicParameters = BuildDefaultOracleDynamicParameters(entry);
 
@@ -56,9 +55,8 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
             {
                 using (var oracleConnection = new OracleConnection(_connectionString))
                 {
-                    if (oracleConnection.State == ConnectionState.Closed)
-                        oracleConnection.Open();
-                    
+                    OpenOracleConnection(oracleConnection);
+
                     var oracleDynamicParameters = new OracleDynamicParameters();
                     
                     oracleDynamicParameters.Add("CUR_OUT", null, OracleMappingType.RefCursor, ParameterDirection.Output);
@@ -82,8 +80,7 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
             {
                 using (var oracleConnection = new OracleConnection(_connectionString))
                 {
-                    if (oracleConnection.State == ConnectionState.Closed)
-                        oracleConnection.Open();
+                    OpenOracleConnection(oracleConnection);
 
                     var oracleDynamicParameters = BuildDefaultOracleDynamicParameters(entry);
 
@@ -96,6 +93,31 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase
 
                 throw;
             }
+        }
+
+        protected async Task<TReturn> QueryFirstOrDefaultAsyncWithOracleDynamicParameters<TReturn>(OracleDynamicParameters oracleDynamicParameters, string sql)
+        {
+            try
+            {
+                using (var oracleConnection = new OracleConnection(_connectionString))
+                {
+                    OpenOracleConnection(oracleConnection);
+
+                    return await oracleConnection.QueryFirstOrDefaultAsync<TReturn>(sql, oracleDynamicParameters, null, null, CommandType.StoredProcedure);
+                }
+            }
+            catch(Exception exception)
+            {
+                _logger.LogError("Error: " + exception.Message);
+
+                throw;
+            }
+        }
+
+        private void OpenOracleConnection(OracleConnection oracleConnection)
+        {
+            if (oracleConnection.State == ConnectionState.Closed)
+                oracleConnection.Open();
         }
 
         private OracleDynamicParameters BuildDefaultOracleDynamicParameters<TEntry>(TEntry entry)
