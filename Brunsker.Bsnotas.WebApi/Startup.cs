@@ -26,10 +26,11 @@ namespace Brunsker.Bsnotas.WebApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            app.UseDeveloperExceptionPage();
 
             app.AddApplicationBuilderExtencios();
         }
