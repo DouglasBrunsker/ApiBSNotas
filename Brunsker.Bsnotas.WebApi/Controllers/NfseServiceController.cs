@@ -53,8 +53,12 @@ namespace Brunsker.Bsnotas.WebApi.Controllers
             await _nfseServicoService.ExportaNfsePdfsAsync(generatePdfRequestList);
 
         [HttpPost("exporta_nfse_excel")]
-        public async Task<byte[]> ExportaNfseExcelAsync([FromBody] IEnumerable<int> notasServicoIdEnumerable) =>
-            await _nfseServicoService.ExportaNfseExcelAsync(notasServicoIdEnumerable);
+        public async Task<FileContentResult> ExportaNfseExcelAsync([FromBody] IEnumerable<int> notasServicoIdEnumerable)
+        {
+            //byte[]
+            var rnn = await _nfseServicoService.ExportaNfseExcelAsync(notasServicoIdEnumerable);
+            return File(rnn, "application/vnd.ms-excel", "nome");
+        }
 
         [HttpPost("exporta_nfse_xml")]
         public async Task<byte[]> ExportaNfseXmlsAsync([FromBody] IEnumerable<int> notasServicoIdEnumerable) =>

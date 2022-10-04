@@ -8,8 +8,6 @@ using Brunsker.Bsnotas.Application.Responses.Pdf;
 using Brunsker.Bsnotas.Application.Responses.Totalizador;
 using Brunsker.Bsnotas.Domain.Interfaces;
 using Brunsker.Bsnotas.Domain.Models;
-using OfficeOpenXml.Style;
-using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,6 +17,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using Microsoft.Extensions.Logging;
+using ClosedXML.Excel;
 
 namespace Brunsker.Bsnotas.Application.Services
 {
@@ -83,8 +82,7 @@ namespace Brunsker.Bsnotas.Application.Services
             if (notasServicoIdEnumerable.Any())
             {
                 var nfseList = await BuildNfseList(notasServicoIdEnumerable);
-
-                return BuildExcelByteArray(nfseList);
+                return await ExportExcel(nfseList);
             }
 
             return null;
@@ -173,20 +171,6 @@ namespace Brunsker.Bsnotas.Application.Services
             return bytes;
         }
 
-        private byte[] BuildExcelByteArray(List<Nfse> nfseList)
-        {
-            var memoryStream = new MemoryStream();
-
-            using (var excelPackage = new ExcelPackage(memoryStream))
-            {
-                var excelWorksheet = BuildExcelWorksheet(excelPackage, nfseList);
-
-                memoryStream.Position = 0;
-            }
-
-            return memoryStream.ToArray();
-        }
-
         private async Task<List<Nfse>> BuildNfseList(IEnumerable<int> notasServicoIdEnumerable)
         {
             var nfseList = new List<Nfse>();
@@ -199,21 +183,6 @@ namespace Brunsker.Bsnotas.Application.Services
             }
 
             return nfseList;
-        }
-
-        private ExcelWorksheet BuildExcelWorksheet(ExcelPackage excelPackage, List<Nfse> nfseList)
-        {
-            var excelWorksheet = excelPackage.Workbook.Worksheets.Add("NFse");
-
-            excelWorksheet.Cells["A1"].LoadFromCollection(nfseList, true);
-            excelWorksheet.Cells.AutoFitColumns();
-            excelWorksheet.Row(1).Style.Font.Bold = true;
-            excelWorksheet.Row(1).Style.Fill.PatternType = ExcelFillStyle.Solid;
-            excelWorksheet.Row(1).Style.Fill.BackgroundColor.SetColor((int)0.8, 64, 186, 20);
-
-            excelPackage.Save();
-
-            return excelWorksheet;
         }
 
         private async Task<List<Pdf>> CreatePdfList(IEnumerable<GeneratePdfRequest> generatePdfRequestList)
@@ -248,6 +217,24 @@ namespace Brunsker.Bsnotas.Application.Services
                         }
                     }
                 }
+            }
+        }
+
+        private async Task<byte[]> ExportExcel(List<Nfse> nfseList)
+        {
+            var fileName = @"wwwroot\NFSE\excel" + Guid.NewGuid() + ".xlsx";
+
+            using (var workbook = new XLWorkbook())
+            {
+                workbook.AddWorksheet("Notas").FirstCell().InsertTable(nfseList, false);
+
+                workbook.SaveAs(fileName);
+
+                var fileBytes = await File.ReadAllBytesAsync(fileName);
+
+                File.Delete(fileName);
+
+                return fileBytes;
             }
         }
     }
