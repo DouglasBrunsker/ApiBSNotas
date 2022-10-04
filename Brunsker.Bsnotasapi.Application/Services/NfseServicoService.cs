@@ -12,7 +12,6 @@ using OfficeOpenXml.Style;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +19,6 @@ using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using Microsoft.Extensions.Logging;
-using System.IO.Pipes;
 
 namespace Brunsker.Bsnotas.Application.Services
 {
@@ -208,14 +206,10 @@ namespace Brunsker.Bsnotas.Application.Services
             var excelWorksheet = excelPackage.Workbook.Worksheets.Add("NFse");
 
             excelWorksheet.Cells["A1"].LoadFromCollection(nfseList, true);
-
             excelWorksheet.Cells.AutoFitColumns();
-
             excelWorksheet.Row(1).Style.Font.Bold = true;
-
             excelWorksheet.Row(1).Style.Fill.PatternType = ExcelFillStyle.Solid;
-
-            excelWorksheet.Row(1).Style.Fill.BackgroundColor.SetColor(Color.MediumSeaGreen);
+            excelWorksheet.Row(1).Style.Fill.BackgroundColor.SetColor((int)0.8, 64, 186, 20);
 
             excelPackage.Save();
 
