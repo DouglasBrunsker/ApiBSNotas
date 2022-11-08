@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Brunsker.Bsnotasapi.OracleAdapter
+namespace Brunsker.Bsnotas.OracleAdapter.Repositories
 {
     public class UsuarioRepository : IUsuarioRepository
     {
@@ -71,16 +71,16 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
             }
             return usuario;
         }
-        
+
         public async Task<Usuario> Login(string login, string senha)
         {
             try
             {
                 string sql = "pkg_clientes_nfe.LOGIN_USUARIO";
 
-                using (var oracleConnection= new OracleConnection(_connectionString))
+                using (var oracleConnection = new OracleConnection(_connectionString))
                 {
-                    if (oracleConnection.State == ConnectionState.Closed) 
+                    if (oracleConnection.State == ConnectionState.Closed)
                         oracleConnection.Open();
 
                     var oracleDynamicParameters = new OracleDynamicParameters();

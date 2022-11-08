@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Brunsker.Bsnotasapi.Domain.Models;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
 
-namespace Brunsker.Bsnotas.OracleAdapter
+namespace Brunsker.Bsnotas.OracleAdapter.Repositories
 {
     public sealed class NFEntradaRepository : INFEntradaRepository
     {
@@ -180,7 +180,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                
+
                 var result = await conn.QueryAsync<NF>("pkg_bs_nf_entrada.PESQ_NFENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);
                 return result;
             }
@@ -398,7 +398,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
             try
             {
-                 
+
 
                 using (var conn = new OracleConnection(_connectionString))
                 {

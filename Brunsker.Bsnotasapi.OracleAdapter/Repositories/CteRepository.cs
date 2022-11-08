@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Brunsker.Bsnotasapi.OracleAdapter
+namespace Brunsker.Bsnotas.OracleAdapter.Repositories
 {
     public class CteRepository : ICteRepository
     {
@@ -55,21 +55,21 @@ namespace Brunsker.Bsnotasapi.OracleAdapter
                 dynamicParameters.Add("pDATAINI", pesquisa.DATAINI);
                 dynamicParameters.Add("pDATAFIM", pesquisa.DATAFIM);
                 dynamicParameters.Add("pUF", pesquisa.UF);
-                dynamicParameters.Add("pNUMNOTA", pesquisa.NUMCTE);                
-                dynamicParameters.Add("pEXIBIRCTEMANIFACORDO", pesquisa.EXIBIRCTEMANIFACORDO == true ? 1 : 0);                
-                dynamicParameters.Add("pEXIBIRCTECARTACORRECAO", pesquisa.EXIBIRCTECARTACORRECAO == true ? 1 : 0);                
-                dynamicParameters.Add("pEXIBIRCTECLITOMADOR", pesquisa.EXIBIRCTECLITOMADOR == true ? 1 : 0);                
-                dynamicParameters.Add("pSTATUSCTEAUTORI", pesquisa.STATUSCTEAUTORI == true ? 1 : 0);                
-                dynamicParameters.Add("pSTATUSCTECANC", pesquisa.STATUSCTECANC == true ? 1 : 0);                
-                dynamicParameters.Add("pSTATUSCTEDENEGADO", pesquisa.STATUSCTEDENEGADO == true ? 1 : 0);                
+                dynamicParameters.Add("pNUMNOTA", pesquisa.NUMCTE);
+                dynamicParameters.Add("pEXIBIRCTEMANIFACORDO", pesquisa.EXIBIRCTEMANIFACORDO == true ? 1 : 0);
+                dynamicParameters.Add("pEXIBIRCTECARTACORRECAO", pesquisa.EXIBIRCTECARTACORRECAO == true ? 1 : 0);
+                dynamicParameters.Add("pEXIBIRCTECLITOMADOR", pesquisa.EXIBIRCTECLITOMADOR == true ? 1 : 0);
+                dynamicParameters.Add("pSTATUSCTEAUTORI", pesquisa.STATUSCTEAUTORI == true ? 1 : 0);
+                dynamicParameters.Add("pSTATUSCTECANC", pesquisa.STATUSCTECANC == true ? 1 : 0);
+                dynamicParameters.Add("pSTATUSCTEDENEGADO", pesquisa.STATUSCTEDENEGADO == true ? 1 : 0);
                 dynamicParameters.Add("pSTATUSMANIFDESACORDO", pesquisa.STATUSMANIFDESACORDO == true ? 1 : 0);
-                dynamicParameters.Add("pNATUREZAOPER", pesquisa.NATUREZAOPER);                
-                dynamicParameters.Add("pCHAVECTE", pesquisa.CHAVECTE);                
-                dynamicParameters.Add("pCNPJEMITENTE", pesquisa.CNPJEMITENTE);                
-                dynamicParameters.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);                
-                dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJTOMADOR);                
-                dynamicParameters.Add("pNOMEDEST", pesquisa.NOMEDEST);                
-                dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);                
+                dynamicParameters.Add("pNATUREZAOPER", pesquisa.NATUREZAOPER);
+                dynamicParameters.Add("pCHAVECTE", pesquisa.CHAVECTE);
+                dynamicParameters.Add("pCNPJEMITENTE", pesquisa.CNPJEMITENTE);
+                dynamicParameters.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);
+                dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJTOMADOR);
+                dynamicParameters.Add("pNOMEDEST", pesquisa.NOMEDEST);
+                dynamicParameters.Add("pEMPRESASCADASTRADAS", empresas);
                 dynamicParameters.Add("CUR_OUT", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
                 return await conn.QueryAsync<Cte>("pkg_bs_cte_entrada.PESQ_CTENT", param: dynamicParameters, commandType: CommandType.StoredProcedure);

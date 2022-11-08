@@ -1,18 +1,15 @@
 ﻿using Brunsker.Bsnotas.Domain.Interfaces;
 using Brunsker.Bsnotas.Domain.Models;
-using Brunsker.Bsnotasapi.OracleAdapter;
 using Dapper;
 using Dapper.Oracle;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Oracle.ManagedDataAccess.Client;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Brunsker.Bsnotas.OracleAdapter
+namespace Brunsker.Bsnotas.OracleAdapter.Repositories
 {
     public class CadastroCFOPRepository : ICadastroCFOPRepository
     {
@@ -29,7 +26,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
 
         public async Task CadastrarCFOP(int seqCliente, string stringBanco, int cfopEnd, int cfoSaida, string descricao)
         {
-             CadastroCFOP cadastroCFOP = null;
+            CadastroCFOP cadastroCFOP = null;
 
             try
             {
@@ -50,7 +47,7 @@ namespace Brunsker.Bsnotas.OracleAdapter
             catch (Exception ex)
             {
                 _logger.LogError("Error: " + ex.Message);
-            }        
+            }
         }
     }
 }
