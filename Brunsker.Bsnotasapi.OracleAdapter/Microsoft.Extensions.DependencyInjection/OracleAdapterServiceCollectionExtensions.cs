@@ -1,8 +1,7 @@
 ﻿using Brunsker.Bsnotas.Domain.Interfaces;
-using Brunsker.Bsnotas.OracleAdapter;
+using Brunsker.Bsnotas.OracleAdapter.Repositories;
 using Brunsker.Bsnotas.OracleAdapter.Repositories.RepositoryBase;
 using Brunsker.Bsnotasapi.Domain.Interfaces;
-using Brunsker.Bsnotasapi.OracleAdapter;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Oracle.ManagedDataAccess.Client;
 
-namespace Brunsker.Bsnotasapi.OracleAdapter
+namespace Brunsker.Bsnotas.OracleAdapter.Repositories
 {
     public class NFSaidaRepository : INFSaidaRepository
     {
