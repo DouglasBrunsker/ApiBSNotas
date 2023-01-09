@@ -16,5 +16,6 @@ namespace Brunsker.Bsnotas.WebApi
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
     }
 }

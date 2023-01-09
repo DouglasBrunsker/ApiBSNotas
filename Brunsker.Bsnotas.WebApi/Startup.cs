@@ -22,6 +22,15 @@ namespace Brunsker.Bsnotas.WebApi
             services.AddApplicationServicesExtensions(Configuration);
 
             services.AddSwaggerDocumentation();
+
+            services.AddCors(options =>
+                options.AddPolicy("CorsPolicy", builder => builder
+
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                )
+            );
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,6 +39,8 @@ namespace Brunsker.Bsnotas.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("CorsPolicy");
             //app.UseDeveloperExceptionPage();
 
             app.AddApplicationBuilderExtencios();
