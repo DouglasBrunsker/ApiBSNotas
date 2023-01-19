@@ -11,7 +11,7 @@ namespace Brunsker.Bsnotasapi.Domain.Models
         public long NUMTRANSVENDA { get; set; }
         public string CNPJ { get; set; }
         public string IE { get; set; }
-        public int SERIE { get; set; }
+        public string SERIE { get; set; }
         public string CGCFILIAL { get; set; }
         public long CODFORNECFRETE { get; set; }
         public DateTime DTSAIDA { get; set; }
