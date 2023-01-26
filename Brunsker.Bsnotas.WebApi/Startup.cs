@@ -25,7 +25,6 @@ namespace Brunsker.Bsnotas.WebApi
 
             services.AddCors(options =>
                 options.AddPolicy("CorsPolicy", builder => builder
-                .AllowCredentials()
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
