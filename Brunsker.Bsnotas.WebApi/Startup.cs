@@ -24,12 +24,13 @@ namespace Brunsker.Bsnotas.WebApi
             services.AddSwaggerDocumentation();
 
             services.AddCors(options =>
+            {
                 options.AddPolicy("CorsPolicy", builder => builder
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader()
-                )
-            );
+                .AllowAnyHeader());
+
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
