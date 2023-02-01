@@ -119,13 +119,13 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories
             {
                 string empresas = null;
 
-                DateTime? dataEntradaIni = null;
-                DateTime? dataEntradaFim = null;
+                DateTime? dataEmissaoIni = null;
+                DateTime? dataEmissaoFim = null;
 
-                if (pesquisa?.DTENT?.Length > 0)
+                if (pesquisa?.DTEMISSAO?.Length > 0)
                 {
-                    dataEntradaIni = pesquisa.DTENT[0];
-                    dataEntradaFim = pesquisa.DTENT[1];
+                    dataEmissaoIni = pesquisa.DTEMISSAO[0];
+                    dataEmissaoFim = pesquisa.DTEMISSAO[1];
                 }
 
                 if (pesquisa?.EMPRESASCADASTRADAS?.Length > 0)
@@ -155,8 +155,8 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories
                 dynamicParameters.Add("pNOMEEMITENTE", pesquisa.NOMEEMITENTE);
                 dynamicParameters.Add("pCNPJDEST", pesquisa.CNPJDEST);
                 dynamicParameters.Add("pNOMEDEST", pesquisa.NOMEDEST);
-                dynamicParameters.Add("pDTENTINI", dataEntradaIni);
-                dynamicParameters.Add("pDTENTFIM", dataEntradaFim);
+                dynamicParameters.Add("pDTENTINI", dataEmissaoIni);
+                dynamicParameters.Add("pDTENTFIM", dataEmissaoFim);
                 dynamicParameters.Add("pUF", pesquisa.UF);
                 dynamicParameters.Add("pCFOP", pesquisa.CFOP);
                 dynamicParameters.Add("pEXIBIRNFELIVROFISCAL", pesquisa.EXIBIRNFELIVROFISCAL == true ? 1 : 0);
