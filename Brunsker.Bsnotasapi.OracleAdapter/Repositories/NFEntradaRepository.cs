@@ -125,7 +125,7 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories
                 if (pesquisa?.DTEMISSAO?.Length > 0)
                 {
                     dataEmissaoIni = pesquisa.DTEMISSAO[0];
-                    dataEmissaoFim = pesquisa.DTEMISSAO[1];
+                    dataEmissaoFim = pesquisa.DTEMISSAO[1].AddDays(1);
                 }
 
                 if (pesquisa?.EMPRESASCADASTRADAS?.Length > 0)
@@ -147,7 +147,7 @@ namespace Brunsker.Bsnotas.OracleAdapter.Repositories
 
                 dynamicParameters.Add("pSEQ_CLIENTE", pesquisa.seqCliente);
                 dynamicParameters.Add("pDATAINI", pesquisa.DATAINI);
-                dynamicParameters.Add("pDATAFIM", pesquisa.DATAFIM);
+                dynamicParameters.Add("pDATAFIM", pesquisa.DATAFIM.Value.AddDays(1));
                 dynamicParameters.Add("pCHAVENFE", pesquisa.CHAVENFE);
                 dynamicParameters.Add("pNATUREZAOPER", pesquisa.NATUREZAOPER);
                 dynamicParameters.Add("pNUMNOTA", pesquisa.NUMNOTA);
